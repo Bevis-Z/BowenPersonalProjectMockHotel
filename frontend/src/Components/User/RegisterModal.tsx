@@ -47,22 +47,22 @@ function RegisterModal ({ show, onHide }: RegisterModalProps) {
         <Form>
           <div>
             <label>Email</label>
-            <Form.Control type="text" className="form-control" id="inputUserEmail" onChange={(event) => setUserEmail(event.target.value)} value={userEmail}/>
+            <Form.Control type="text" className="form-control" id="inputUserEmail" onChange={(event) => setUserEmail(event.target.value)} value={userEmail} />
           </div>
           <div>
             <label>UserName</label>
-            <Form.Control type="text" className="form-control" id="inputUserName" onChange={(event) => setUserName(event.target.value)} value={userName}/>
+            <Form.Control type="text" className="form-control" id="inputUserName" onChange={(event) => setUserName(event.target.value)} value={userName} />
           </div>
           <div>
             <label>Password</label>
-            <Form.Control type="password" className="form-control" id="inputUserPassword" onChange={(event) => setUserPassword(event.target.value)} value={userPassword}/>
+            <Form.Control type="password" className="form-control" id="inputUserPassword" onChange={(event) => setUserPassword(event.target.value)} value={userPassword} />
           </div>
           <div>
             <label>Check Password</label>
-            <Form.Control type="password" className="form-control" id="checkUserPassword" onChange={(event) => setCheckUserPassword(event.target.value)} value={checkUserPassword}/>
+            <Form.Control type="password" className="form-control" id="checkUserPassword" onChange={(event) => setCheckUserPassword(event.target.value)} value={checkUserPassword} />
           </div>
           <div>
-            <button type="submit" className="btn btn-primary mb-3" onClick={ defaultUserRegisterRequest }>Register</button>
+            <button type="submit" className="btn btn-primary mb-3" onClick={defaultUserRegisterRequest}>Register</button>
           </div>
           <Link to={'/login'}>Click to Login</Link>
         </Form>

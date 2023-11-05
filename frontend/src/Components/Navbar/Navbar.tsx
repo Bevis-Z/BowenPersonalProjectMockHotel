@@ -35,31 +35,30 @@ function Navbar ({ onLoginClick, onRegisterClick }: NavbarProps) {
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/1200px-Airbnb_Logo_B%C3%A9lo.svg.png"
-               alt="" width="auto" height="36" className="d-inline-block align-text-top"/>
+            alt="" width="auto" height="36" className="d-inline-block align-text-top" />
         </Link>
         <form className="d-flex" role="search">
           <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
-            <button className="btn btn-outline-success" type="submit">Search</button>
+          <button className="btn btn-outline-success" type="submit">Search</button>
         </form>
         <div className={'userButton dropdown'}>
           <div className="nav-item">
             <ul className="dropdown-menu dropdown-menu-lg-end">
-              { isLoggedIn
+              {isLoggedIn
                 ? (
                   <>
-                    <li><a className="dropdown-item" onClick={ userLogout } href="/">Logout</a></li>
+                    <li><a className="dropdown-item" onClick={userLogout} href="/">Logout</a></li>
                     <li><a className="dropdown-item" href="#">Profile</a></li>
                   </>)
                 : (
                   <>
-                  <li><a className="dropdown-item" onClick={onLoginClick}>Login</a></li>
-                  <li><a className="dropdown-item" onClick={onRegisterClick}>Sign Up</a></li>
-                  </>
-                  )}
+                    <li><a className="dropdown-item" onClick={onLoginClick}>Login</a></li>
+                    <li><a className="dropdown-item" onClick={onRegisterClick}>Sign Up</a></li>
+                  </>)}
             </ul>
           </div>
           <button className="navbar-nav me-auto mb-2 mb-lg-0" data-bs-toggle="dropdown" id={'navUser'} >
-            <FaBars/>
+            <FaBars />
             <FaUserCircle
               color={'grey'} size="25px"
             />
