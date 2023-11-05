@@ -5,6 +5,7 @@ import About from './Components/About';
 import LoginModal from './Components/User/LoginModal';
 import RegisterModal from './Components/User/RegisterModal';
 import Navbar from './Components/Navbar/Navbar';
+import { AuthProvider } from './AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // eslint-disable-next-line import/extensions
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -50,7 +51,7 @@ function App () {
     navigate('/register', { state: { backgroundLocation: location } });
   };
   return (
-    <>
+    <AuthProvider>
       <Navbar onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick}/>
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<LandingPage />} />
@@ -64,7 +65,7 @@ function App () {
       {showRegisterModal && (
         <RegisterModal show={showRegisterModal} onHide={handleCloseModal} />
       )}
-    </>
+    </AuthProvider>
   );
 }
 
