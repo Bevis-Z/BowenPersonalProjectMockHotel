@@ -5,11 +5,8 @@
         "es2021": true,
         "jest": true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "standard"
-    ],
+    "extends": ["eslint:recommended", "plugin:react/recommended", "standard", "plugin:@typescript-eslint/recommended"],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -17,19 +14,34 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "plugins": [
-        "react"
-    ],
+    "plugins": ["react"],
     "rules": {
+        "react/prop-types": [2, { "ignore": ["children"] }],
+        "react/jsx-filename-extension": [
+            "error",
+            {
+                "extensions": [".ts", ".tsx", ".js", ".jsx"]
+            }
+        ],
+        "import/extensions": [
+            "error",
+            {
+                "extensions": [".ts", ".tsx", ".js", ".jsx", ".gif", ".svg"]
+            }
+        ],
         "linebreak-style": 0,
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
         "semi": 0,
         "comma-dangle": 0,
-        "react/prop-types": 0
+        "no-undef": "off"
     },
     "settings": {
         "react": {
             "version": "detect"
+        },
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx", ".gif", ".svg"]
+            }
         }
     }
 }
