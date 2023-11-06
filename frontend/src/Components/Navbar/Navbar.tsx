@@ -47,8 +47,8 @@ function Navbar ({ onLoginClick, onRegisterClick }: NavbarProps) {
               {isLoggedIn
                 ? (
                   <>
+                    <li><a className="dropdown-item" href="/Hosting">Manage listings</a></li>
                     <li><a className="dropdown-item" onClick={userLogout} href="/">Logout</a></li>
-                    <li><a className="dropdown-item" href="#">Profile</a></li>
                   </>)
                 : (
                   <>

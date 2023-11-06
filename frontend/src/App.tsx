@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import LandingPage from './Components/LandingPage';
-import About from './Components/About';
+import LandingPage from './Pages/LandingPage/LandingPage';
+import Hosting from './Pages/Hosting/Hosting';
 import LoginModal from './Components/User/LoginModal';
 import RegisterModal from './Components/User/RegisterModal';
 import Navbar from './Components/Navbar/Navbar';
@@ -14,14 +14,14 @@ function App () {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 检查是否存在后台路由状态
+  // Check if the current location has a background state
   const backgroundLocation = location.state && location.state.backgroundLocation;
 
-  // 用于控制模态框显示的状态
+  // Use to control the visibility of the modal
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
-  // 当路径是 '/login' 时显示模态框
+  // when the location changes, check if the path is '/login' or '/register'
   useEffect(() => {
     const currentPath = location.pathname;
     const isLoginRoute = currentPath === '/login';
@@ -32,22 +32,22 @@ function App () {
   }, [location]);
 
   const handleLoginClick = () => {
-    // 设置背景路由状态，并导航至 '/login'
+    // Set the background location state
     navigate('/login', { state: { backgroundLocation: location } });
   };
   const handleCloseModal = () => {
     setShowLoginModal(false);
-    // 如果 backgroundLocation 存在，则回到那个位置
+    // If there is a background location, navigate to that location
     if (backgroundLocation) {
       navigate(backgroundLocation.pathname, { replace: true });
     } else {
-      // 否则回到首页
+      // Else navigate to the home page
       navigate('/', { replace: true });
     }
   };
 
   const handleRegisterClick = () => {
-    // 设置背景路由状态，并导航至 '/login'
+    // Set the background location state
     navigate('/register', { state: { backgroundLocation: location } });
   };
   return (
@@ -55,10 +55,10 @@ function App () {
       <Navbar onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick}/>
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/hosting" element={<Hosting />} />
       </Routes>
 
-      {/* 当路径为/login时显示模态框 */}
+      {/* When the current path equal to 'login' show loginModal */}
       {showLoginModal && (
         <LoginModal show={showLoginModal} onHide={handleCloseModal} />
       )}

@@ -1,9 +1,8 @@
 import React from 'react';
 import { Form, Modal } from 'react-bootstrap';
-import './loginmodal.css';
-import 'bootstrap/dist/css/bootstrap.min.css'
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
+import './loginmodal.css';
 
 // Define a type for the LoginModal props
 type LoginModalProps = {
