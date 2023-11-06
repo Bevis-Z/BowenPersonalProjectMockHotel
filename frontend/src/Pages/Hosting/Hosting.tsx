@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './index.css';
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CreateHosting from '../../Components/CreateHosting';
+import CreateHosting from '../../Components/CreateHosting/CreateHosting';
 
 function Hosting () {
   const [show, setShow] = useState(false);
