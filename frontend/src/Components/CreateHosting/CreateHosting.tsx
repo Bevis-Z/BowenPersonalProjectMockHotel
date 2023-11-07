@@ -15,162 +15,28 @@ interface Amenities {
   WashingMachine: boolean;
   Dryer: boolean;
 }
-function createHosting ({ show, onHide }: createHostingProps) {
-  const [step, setStep] = useState(1);
-  const [images, setImages] = useState<string[]>([]);
-  const [title, setTitle] = useState('');
-  const [address, setAddress] = useState('');
-  const [price, setPrice] = useState('');
-  const [bathroomNumber, setBathroomNumber] = useState('');
-  const [amenities, setAmenities] = useState<Amenities>({
-    Wifi: false,
-    TV: false,
-    Kitchen: false,
-    AirConditioning: false,
-    Heating: false,
-    WashingMachine: false,
-    Dryer: false,
-  });
-  type Bed = {
-    count: number;
-    size: 'queen' | 'king' | 'double' | 'single';
-  };
+type Bed = {
+  count: number;
+  size: 'queen' | 'king' | 'double' | 'single';
+};
 
-  type Bedroom = {
-    type: string; // 你可以将这个改为具体的卧室类型，例如 'master' | 'guest' | '';
-    beds: Bed[];
-  };
-
-  const [bedrooms, setBedrooms] = useState<Bedroom[]>([]);
-
-  const addBedroom = (): void => {
-    setBedrooms([...bedrooms, { type: '', beds: [{ count: 1, size: 'queen' }] }]);
-  };
-  const updateBedroom = (index: number, newType: string): void => {
-    const newBedrooms = bedrooms.map(bedroom => ({
-      ...bedroom,
-      beds: bedroom.beds.map(bed => ({ ...bed }))
-    }));
-
-    // Use the non-null assertion operator '!'
-    newBedrooms[index]!.type = newType;
-    setBedrooms(newBedrooms);
-  };
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Get all the files that the user has selected
-    const files = event.target.files ? Array.from(event.target.files) : [];
-
-    const imageStrings: string[] = [];
-
-    // Set the numbers of files that have read
-    let filesRead = 0;
-
-    // Process each file that the user selected
-    files.forEach((file) => {
-      const fileReader = new FileReader();
-
-      // When the file reader loads the file
-      fileReader.onload = (e: ProgressEvent<FileReader>) => {
-        // Make sure the file a string
-        const base64String = e.target?.result as string;
-        imageStrings.push(base64String);
-        filesRead += 1;
-
-        if (filesRead === files.length) {
-          setImages(imageStrings);
-        }
-      };
-
-      fileReader.readAsDataURL(file);
-    });
-  };
-  const addBed = (bedroomIndex: number): void => {
-    const newBedrooms = bedrooms.map(bedroom => ({
-      ...bedroom,
-      beds: bedroom.beds.map(bed => ({ ...bed }))
-    }));
-
-    newBedrooms[bedroomIndex]?.beds.push({ count: 1, size: 'queen' });
-    setBedrooms(newBedrooms);
-  };
-
-  const updateBed = (
-    bedroomIndex: number,
-    bedIndex: number,
-    newCount: number,
-    newSize: 'queen' | 'king' | 'double' | 'single'
-  ): void => {
-    const newBedrooms = bedrooms.map(bedroom => ({
-      ...bedroom,
-      beds: bedroom.beds.map(bed => ({ ...bed }))
-    }));
-
-    newBedrooms[bedroomIndex]!.beds[bedIndex]! = { count: Number(newCount), size: newSize };
-    setBedrooms(newBedrooms);
-  };
-  const amenityOptions = [
-    { key: 'Wifi', label: 'Wifi' },
-    { key: 'TV', label: 'TV' },
-    { key: 'Kitchen', label: 'Kitchen' },
-    { key: 'AirConditioning', label: 'Air conditioning' },
-    { key: 'Heating', label: 'Heating' },
-    { key: 'WashingMachine', label: 'Washing machine' },
-    { key: 'Dryer', label: 'Dryer' },
-  ];
-  const resetForm = () => {
-    setTitle('');
-    setAddress('');
-    setPrice('');
-    setImages([]);
-    setBathroomNumber('');
-    setBedrooms([]);
-    setAmenities({
-      Wifi: false,
-      TV: false,
-      Kitchen: false,
-      AirConditioning: false,
-      Heating: false,
-      WashingMachine: false,
-      Dryer: false,
-    })
-  };
-  const handleAmenityChange = (amenityKey: keyof Amenities, checked: boolean) => {
-    setAmenities(prev => ({ ...prev, [amenityKey]: checked }));
-  };
-
-  // Use the useEffect hook to reset the form when the show prop changes.
-  useEffect(() => {
-    // When the show prop set to false, reset the form
-    if (!show) {
-      resetForm();
-    }
-  }, [show]);
-  const createHostingRequest = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
-    const metaData = {
-      bathroomNumber,
-      bedrooms,
-      amenities: Object.keys(amenities).filter((key): key is keyof Amenities => amenities[key as keyof Amenities]),
-    };
-    const response = await fetch('http://localhost:5005/listings/new', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ title, address, price, thumbnail: images, metadata: metaData })
-    });
-    const data = await response.json();
-    console.log(data);
-    if (data.error) {
-      alert(data.error);
-    } else {
-      alert('Create successfully');
-      onHide();
-    }
-  }
-  const StepOne = () => {
-    return (
+type Bedroom = {
+  type: string; // 你可以将这个改为具体的卧室类型，例如 'master' | 'guest' | '';
+  beds: Bed[];
+};
+interface StepOneProps {
+  images: string[];
+  title: string;
+  address: string;
+  price: string;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setAddress: React.Dispatch<React.SetStateAction<string>>;
+  setPrice: React.Dispatch<React.SetStateAction<string>>;
+  onNext: () => void;
+  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+const StepOne:React.FC<StepOneProps> = ({ images, title, address, price, setTitle, setAddress, setPrice, onNext, handleFileChange }) => {
+  return (
     <Form>
       <div>
         <label>Title</label>
@@ -210,11 +76,73 @@ function createHosting ({ show, onHide }: createHostingProps) {
           <option value="3">House</option>
         </Form.Select>
       </div>
+      <Button variant="primary" onClick={onNext}>
+        Next
+      </Button>
     </Form>
-    );
+  );
+};
+interface StepTwoProps {
+  bathroomNumber: string;
+  bedrooms: Bedroom[];
+  amenities: Amenities;
+  setBathroomNumber: React.Dispatch<React.SetStateAction<string>>;
+  setBedrooms: React.Dispatch<React.SetStateAction<Bedroom[]>>;
+  setAmenities: React.Dispatch<React.SetStateAction<Amenities>>;
+  createHostingRequest: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onBack: () => void;
+}
+const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, setBathroomNumber, setBedrooms, setAmenities, onBack, createHostingRequest }) => {
+  const addBedroom = (): void => {
+    setBedrooms([...bedrooms, { type: '', beds: [{ count: 1, size: 'queen' }] }]);
   };
-  const StepTwo = () => {
-    return (
+  const updateBedroom = (index: number, newType: string): void => {
+    const newBedrooms = bedrooms.map(bedroom => ({
+      ...bedroom,
+      beds: bedroom.beds.map(bed => ({ ...bed }))
+    }));
+
+    // Use the non-null assertion operator '!'
+    newBedrooms[index]!.type = newType;
+    setBedrooms(newBedrooms);
+  };
+  const addBed = (bedroomIndex: number): void => {
+    const newBedrooms = bedrooms.map(bedroom => ({
+      ...bedroom,
+      beds: bedroom.beds.map(bed => ({ ...bed }))
+    }));
+
+    newBedrooms[bedroomIndex]?.beds.push({ count: 1, size: 'queen' });
+    setBedrooms(newBedrooms);
+  };
+
+  const updateBed = (
+    bedroomIndex: number,
+    bedIndex: number,
+    newCount: number,
+    newSize: 'queen' | 'king' | 'double' | 'single'
+  ): void => {
+    const newBedrooms = bedrooms.map(bedroom => ({
+      ...bedroom,
+      beds: bedroom.beds.map(bed => ({ ...bed }))
+    }));
+
+    newBedrooms[bedroomIndex]!.beds[bedIndex]! = { count: Number(newCount), size: newSize };
+    setBedrooms(newBedrooms);
+  };
+  const amenityOptions = [
+    { key: 'Wifi', label: 'Wifi' },
+    { key: 'TV', label: 'TV' },
+    { key: 'Kitchen', label: 'Kitchen' },
+    { key: 'AirConditioning', label: 'Air conditioning' },
+    { key: 'Heating', label: 'Heating' },
+    { key: 'WashingMachine', label: 'Washing machine' },
+    { key: 'Dryer', label: 'Dryer' },
+  ];
+  const handleAmenityChange = (amenityKey: keyof Amenities, checked: boolean) => {
+    setAmenities(prev => ({ ...prev, [amenityKey]: checked }));
+  };
+  return (
     <Form>
       <div className={'propertyDetails'}>
         <div className={'bathroom'}>
@@ -271,11 +199,122 @@ function createHosting ({ show, onHide }: createHostingProps) {
         }
       </div>
       <div>
+        <Button variant="primary" onClick={onBack}>
+          Back
+        </Button>
         <button type="submit" id="createHosting" className="btn btn-primary" onClick={createHostingRequest}>Create
         </button>
       </div>
     </Form>
-    );
+  );
+};
+function createHosting ({ show, onHide }: createHostingProps) {
+  const [step, setStep] = useState(1);
+  const [images, setImages] = useState<string[]>([]);
+  const [title, setTitle] = useState('');
+  const [address, setAddress] = useState('');
+  const [price, setPrice] = useState('');
+  const [bathroomNumber, setBathroomNumber] = useState('');
+  const [amenities, setAmenities] = useState<Amenities>({
+    Wifi: false,
+    TV: false,
+    Kitchen: false,
+    AirConditioning: false,
+    Heating: false,
+    WashingMachine: false,
+    Dryer: false,
+  });
+  const [bedrooms, setBedrooms] = useState<Bedroom[]>([]);
+
+  const resetForm = () => {
+    setTitle('');
+    setAddress('');
+    setPrice('');
+    setImages([]);
+    setBathroomNumber('');
+    setBedrooms([]);
+    setAmenities({
+      Wifi: false,
+      TV: false,
+      Kitchen: false,
+      AirConditioning: false,
+      Heating: false,
+      WashingMachine: false,
+      Dryer: false,
+    })
+  };
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Get all the files that the user has selected
+    const files = event.target.files ? Array.from(event.target.files) : [];
+
+    const imageStrings: string[] = [];
+
+    // Set the numbers of files that have read
+    let filesRead = 0;
+
+    // Process each file that the user selected
+    files.forEach((file) => {
+      const fileReader = new FileReader();
+
+      // When the file reader loads the file
+      fileReader.onload = (e: ProgressEvent<FileReader>) => {
+        // Make sure the file a string
+        const base64String = e.target?.result as string;
+        imageStrings.push(base64String);
+        filesRead += 1;
+
+        if (filesRead === files.length) {
+          setImages(imageStrings);
+        }
+      };
+
+      fileReader.readAsDataURL(file);
+    });
+  };
+  // Use the useEffect hook to reset the form when the show prop changes.
+  useEffect(() => {
+    // When the show prop set to false, reset the form
+    if (!show) {
+      resetForm();
+    }
+  }, [show]);
+  const createHostingRequest = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    const metaData = {
+      bathroomNumber,
+      bedrooms,
+      amenities: Object.keys(amenities).filter((key): key is keyof Amenities => amenities[key as keyof Amenities]),
+    };
+    const response = await fetch('http://localhost:5005/listings/new', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ title, address, price, thumbnail: images, metadata: metaData })
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.error) {
+      alert(data.error);
+    } else {
+      alert('Create successfully');
+      onHide();
+      setStep(1);
+    }
+  }
+  const handleNextStep = () => {
+    if (step === 1) {
+      setStep(2);
+    } else {
+      setStep(1);
+    }
+  };
+
+  const handlePreviousStep = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
   };
   return (
     <>
@@ -285,27 +324,30 @@ function createHosting ({ show, onHide }: createHostingProps) {
         </Modal.Header>
         <Modal.Body>
           {step === 1 && (
-            <StepOne/>
-          )}
-          {step === 2 && <StepTwo />}
-        </Modal.Body>
-        <Modal.Footer>
-          {step === 1 && (
-            <Button variant="primary" onClick={() => setStep(2)}>
-              Next
-            </Button>
+            <StepOne
+              images={images}
+              title={title}
+              address={address}
+              price={price}
+              setTitle={setTitle}
+              setAddress={setAddress}
+              setPrice={setPrice}
+              onNext={handleNextStep}
+              handleFileChange={handleFileChange}
+            />
           )}
           {step === 2 && (
-            <>
-              <Button variant="secondary" onClick={() => setStep(1)}>
-                Back
-              </Button>
-              <Button variant="primary" onClick={createHostingRequest}>
-                Create
-              </Button>
-            </>
-          )}
-        </Modal.Footer>
+            <StepTwo
+              bathroomNumber={bathroomNumber}
+              bedrooms={bedrooms}
+              amenities={amenities}
+              setBathroomNumber={setBathroomNumber}
+              setBedrooms={setBedrooms}
+              setAmenities={setAmenities}
+              onBack={handlePreviousStep}
+              createHostingRequest={createHostingRequest}
+            />)}
+        </Modal.Body>
       </Modal>
     </>
   );

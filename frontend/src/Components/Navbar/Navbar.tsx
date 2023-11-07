@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaBars, FaUserCircle } from 'react-icons/fa';
@@ -12,6 +12,7 @@ type NavbarProps = {
 
 function Navbar ({ onLoginClick, onRegisterClick }: NavbarProps) {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const navigate = useNavigate();
   const userLogout = async () => {
     const response = await fetch('http://localhost:5005/user/auth/logout', {
       method: 'POST',
@@ -28,6 +29,7 @@ function Navbar ({ onLoginClick, onRegisterClick }: NavbarProps) {
       alert('Logout successfully');
       localStorage.removeItem('token');
       setIsLoggedIn(false);
+      navigate('/');
     }
   }
   return (
@@ -48,7 +50,7 @@ function Navbar ({ onLoginClick, onRegisterClick }: NavbarProps) {
                 ? (
                   <>
                     <li><a className="dropdown-item" href="/Hosting">Manage listings</a></li>
-                    <li><a className="dropdown-item" onClick={userLogout} href="/">Logout</a></li>
+                    <li><a className="dropdown-item" onClick={userLogout}>Logout</a></li>
                   </>)
                 : (
                   <>

@@ -1,0 +1,10 @@
+.carousel-container {
+    width: 272px;
+    overflow: hidden;
+}
+
+.carousel-content {
+    height: 160px;
+    text-align: center;
+    background: #364d79;
+}
