@@ -5,57 +5,8 @@ import HostingListImage from '../HostingListImage/HostingListImage';
 import { BiSolidBath, BiSolidBed } from 'react-icons/bi';
 import './index.css';
 import CreateHosting from '../../CreateHosting/CreateHosting';
+import { Bedroom, HostingListProps, Listing, ListingDetails, Review } from './HostingListInterface';
 
-interface Review {
-  comment: string;
-  star: number;
-}
-
-type Bed = {
-  count: number;
-  size: 'queen' | 'king' | 'double' | 'single';
-};
-type Bedroom = {
-  type: string;
-  beds: Bed[];
-};
-
-interface Metadata {
-  propertyType: string;
-  bathroomNumber: string;
-  bedrooms: Bedroom[];
-  amenities: string[];
-}
-interface Listing {
-  error?: string;
-  id: number;
-  title: string;
-  owner: string;
-  address: string;
-  thumbnail: string[];
-  price: string;
-  reviews: Review[];
-  totalBeds?: number; // 新增字段，床位总数
-  averageRating?: number; // 新增字段，平均评分
-  metadata: Metadata;
-}
-interface ListingDetails {
-  title: string;
-  owner: string;
-  address: string;
-  price: string;
-  thumbnail: string[];
-  metadata: Metadata;
-  reviews: Review[];
-  availability?: boolean; // 根据您的实际数据类型调整
-  published: boolean;
-  postedOn: string | null;
-}
-
-interface HostingListProps {
-  refreshList: boolean;
-  onHostCreated: () => void;
-}
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   <Space>
     {React.createElement(icon)}
@@ -130,6 +81,7 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                 throw new Error(detailsJson.error);
               } else {
                 const detailsData = detailsJson.listing as ListingDetails;
+                console.log('Details data:', detailsData); // 日志输出：详细数据
                 return {
                   ...listing,
                   ...detailsData,
@@ -139,11 +91,11 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
               }
             } catch (error) {
               console.error(`Failed to fetch details for listing ${listing.id}:`, error);
-              return listing; // 在这里返回原始列表项，而不是部分填充的对象
+              return listing;
             }
           })
         );
-        console.log('Listings with details:', listingsWithDetails); // 日志输出：带详细信息的列表
+        console.log('Listings with details:', listingsWithDetails);
         setListings(listingsWithDetails);
       }
     } catch (error) {
@@ -158,8 +110,8 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
   }, []);
   useEffect(() => {
     fetchListings();
-    console.log('refreshList', refreshList);
   }, [refreshList]);
+  console.log('Listings:', listings);
   return (
     <>
       {isLoading
@@ -169,9 +121,6 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
               itemLayout="vertical"
               size="large"
               pagination={{
-                onChange: (page) => {
-                  console.log(page);
-                },
                 pageSize: 3,
               }}
               dataSource={listings}
@@ -193,6 +142,7 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                           <div className={'bedBathBox'}>
                             <div><BiSolidBed/> {item.totalBeds}</div>
                             <div><BiSolidBath/> {item.metadata.bathroomNumber}</div>
+                            <div>Online: {item.published ? 'Yes' : 'No'}</div>
                           </div>
                         </>
                       }

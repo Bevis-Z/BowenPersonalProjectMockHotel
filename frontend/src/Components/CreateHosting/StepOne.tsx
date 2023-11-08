@@ -1,22 +1,30 @@
 import React from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { Upload } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import type { UploadFile } from 'antd/es/upload/interface';
 
 interface StepOneProps {
-  images: string[];
+  images: UploadFile<any>[];
   title: string;
   address: string;
   price: string;
   propertyType: string;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
-  setPropertyType: React.Dispatch<React.SetStateAction<string>>;
-  setAddress: React.Dispatch<React.SetStateAction<string>>;
-  setPrice: React.Dispatch<React.SetStateAction<string>>;
-  setImages: React.Dispatch<React.SetStateAction<string[]>>;
+  setTitle: (value: string) => void;
+  setPropertyType: (value: string) => void;
+  setAddress: (value: string) => void;
+  setPrice: (value: string) => void;
   onNext: () => void;
-  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onFileListChange: (files: UploadFile[]) => void;
 }
 
-const StepOne:React.FC<StepOneProps> = ({ images, title, address, price, setTitle, propertyType, setPropertyType, setAddress, setPrice, onNext, handleFileChange }) => {
+const StepOne: React.FC<StepOneProps> = ({ images, title, address, price, setTitle, propertyType, setPropertyType, setAddress, setPrice, onNext, onFileListChange }) => {
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
   return (
     <Form>
       <div>
@@ -36,21 +44,14 @@ const StepOne:React.FC<StepOneProps> = ({ images, title, address, price, setTitl
       </div>
       <div className="mb-3">
         <label htmlFor="formFileMultiple" className="form-label">Thumbnail</label>
-        <Form.Control
-          className="form-control"
-          type="file"
-          id="formFileMultiple"
-          multiple
-          onChange={handleFileChange}
-        />
-        <div className="image-preview">
-          {images.map((image, index) => (
-            <div key={index} className="image-container">
-              <img src={image} alt={`Preview ${index}`} className="img-thumbnail"/>
-              <button onClick={() => index}>Delete</button>
-            </div>
-          ))}
-        </div>
+        <Upload
+          action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+          listType="picture-card"
+          fileList={images}
+          onChange={({ fileList }) => onFileListChange(fileList)}
+        >
+          {images.length >= 8 ? null : uploadButton}
+        </Upload>
       </div>
       <div className={'propertyType'}>
         <a>Property Type</a>
@@ -63,7 +64,6 @@ const StepOne:React.FC<StepOneProps> = ({ images, title, address, price, setTitl
           <option value="TownHouse">TownHouse</option>
           <option value="House">House</option>
         </Form.Select>
-
       </div>
       <Button variant="primary" onClick={onNext}>
         Next

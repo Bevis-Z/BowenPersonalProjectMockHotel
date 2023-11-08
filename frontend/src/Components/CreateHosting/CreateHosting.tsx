@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
+import { UploadFile } from 'antd/es/upload/interface';
 
 interface Amenities {
   Wifi: boolean;
@@ -44,7 +45,7 @@ type createHostingProps = {
 };
 function createHosting ({ show, onHide, editing = false, initialData, onHostCreated }: createHostingProps) {
   const [step, setStep] = useState(1);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]); // 保持 images 为 string[] 类型
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [price, setPrice] = useState('');
@@ -77,34 +78,6 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       WashingMachine: false,
       Dryer: false,
     })
-  };
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Get all the files that the user has selected
-    const files = event.target.files ? Array.from(event.target.files) : [];
-
-    const imageStrings: string[] = [];
-
-    // Set the numbers of files that have read
-    let filesRead = 0;
-
-    // Process each file that the user selected
-    files.forEach((file) => {
-      const fileReader = new FileReader();
-
-      // When the file reader loads the file
-      fileReader.onload = (e: ProgressEvent<FileReader>) => {
-        // Make sure the file a string
-        const base64String = e.target?.result as string;
-        imageStrings.push(base64String);
-        filesRead += 1;
-
-        if (filesRead === files.length) {
-          setImages(imageStrings);
-        }
-      };
-
-      fileReader.readAsDataURL(file);
-    });
   };
   // Use the useEffect hook to reset the form when the show prop changes.
   useEffect(() => {
@@ -193,6 +166,26 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       setStep(step - 1);
     }
   };
+  const toUploadFileList = (images: string[]): UploadFile<any>[] => {
+    return images.map((image, index) => ({
+      uid: index.toString(),
+      name: `image${index}`,
+      status: 'done',
+      url: image,
+    }));
+  };
+  const handleFileListChange = (newFileList: UploadFile<any>[]) => {
+    // 转换为 string[] 类型的 URL 数组
+    const newImages = newFileList.map(file => {
+      if (file.url) {
+        return file.url;
+      } else if (file.originFileObj) {
+        return URL.createObjectURL(file.originFileObj);
+      }
+      return '';
+    }).filter(url => url !== '');
+    setImages(newImages);
+  };
   return (
     <>
       <Modal show={show} onHide={onHide}>
@@ -202,7 +195,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
         <Modal.Body>
           {step === 1 && (
             <StepOne
-              images={images}
+              images={toUploadFileList(images)}
               title={title}
               address={address}
               price={price}
@@ -210,10 +203,9 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
               setPropertyType={setPropertyType}
               setTitle={setTitle}
               setAddress={setAddress}
-              setImages={setImages}
               setPrice={setPrice}
               onNext={handleNextStep}
-              handleFileChange={handleFileChange}
+              onFileListChange={handleFileListChange}
             />
           )}
           {step === 2 && (

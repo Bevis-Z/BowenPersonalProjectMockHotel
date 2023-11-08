@@ -35,13 +35,16 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
     setBedrooms([...bedrooms, { type: '', beds: [{ count: 1, size: 'queen' }] }]);
   };
   const updateBedroom = (index: number, newType: string): void => {
-    const newBedrooms = bedrooms.map(bedroom => ({
-      ...bedroom,
-      beds: bedroom.beds.map(bed => ({ ...bed }))
-    }));
+    const newBedrooms = bedrooms.map((bedroom, idx) => {
+      if (idx === index) {
+        return {
+          ...bedroom,
+          type: newType
+        };
+      }
+      return bedroom;
+    });
 
-    // Use the non-null assertion operator '!'
-    newBedrooms[index]!.type = newType;
     setBedrooms(newBedrooms);
   };
   const addBed = (bedroomIndex: number): void => {
@@ -60,14 +63,22 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
     newCount: number,
     newSize: 'queen' | 'king' | 'double' | 'single'
   ): void => {
-    const newBedrooms = bedrooms.map(bedroom => ({
-      ...bedroom,
-      beds: bedroom.beds.map(bed => ({ ...bed }))
-    }));
+    const newBedrooms = bedrooms.map((bedroom, idx) => {
+      if (idx === bedroomIndex) {
+        const newBeds = bedroom.beds.map((bed, bedIdx) => {
+          if (bedIdx === bedIndex) {
+            return { count: Number(newCount), size: newSize };
+          }
+          return bed;
+        });
+        return { ...bedroom, beds: newBeds };
+      }
+      return bedroom;
+    });
 
-    newBedrooms[bedroomIndex]!.beds[bedIndex]! = { count: Number(newCount), size: newSize };
     setBedrooms(newBedrooms);
   };
+
   const amenityOptions = [
     { key: 'Wifi', label: 'Wifi' },
     { key: 'TV', label: 'TV' },
