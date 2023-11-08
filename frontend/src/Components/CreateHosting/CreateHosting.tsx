@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import './index.css';
 
-type createHostingProps = {
-  show: boolean;
-  onHide: () => void; // Assuming no parameters can pass to this function
-};
 interface Amenities {
   Wifi: boolean;
   TV: boolean;
@@ -29,13 +25,38 @@ interface StepOneProps {
   title: string;
   address: string;
   price: string;
+  propertyType: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setPropertyType: React.Dispatch<React.SetStateAction<string>>;
   setAddress: React.Dispatch<React.SetStateAction<string>>;
   setPrice: React.Dispatch<React.SetStateAction<string>>;
+  setImages: React.Dispatch<React.SetStateAction<string[]>>;
   onNext: () => void;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
-const StepOne:React.FC<StepOneProps> = ({ images, title, address, price, setTitle, setAddress, setPrice, onNext, handleFileChange }) => {
+
+interface Listing {
+  id: number;
+  title: string;
+  address: string;
+  price: string;
+  thumbnail: string[];
+  metadata: {
+    propertyType: string;
+    bathroomNumber: string;
+    bedrooms: Bedroom[];
+    amenities: string[];
+  };
+}
+
+type createHostingProps = {
+  show: boolean;
+  onHide: () => void; // Assuming no parameters can pass to this function
+  editing?: boolean; // 新增：标识是否为编辑模式
+  initialData?: Listing; // 新增：编辑模式下的初始数据
+  onHostCreated: () => void;
+};
+const StepOne:React.FC<StepOneProps> = ({ images, title, address, price, setTitle, propertyType, setPropertyType, setAddress, setPrice, onNext, handleFileChange }) => {
   return (
     <Form>
       <div>
@@ -64,17 +85,25 @@ const StepOne:React.FC<StepOneProps> = ({ images, title, address, price, setTitl
         />
         <div className="image-preview">
           {images.map((image, index) => (
-            <img key={index} src={image} alt={`Preview ${index}`} className="img-thumbnail"/>
+            <div key={index} className="image-container">
+              <img src={image} alt={`Preview ${index}`} className="img-thumbnail"/>
+              <button onClick={() => index}>Delete</button>
+            </div>
           ))}
         </div>
       </div>
       <div className={'propertyType'}>
         <a>Property Type</a>
-        <Form.Select>
-          <option value="1">Apartment</option>
-          <option value="2">TownHouse</option>
-          <option value="3">House</option>
+        <Form.Select
+          onChange={(event) => setPropertyType(event.target.value)}
+          value={propertyType}
+        >
+          <option value="">Select Property Type</option>
+          <option value="Apartment">Apartment</option>
+          <option value="TownHouse">TownHouse</option>
+          <option value="House">House</option>
         </Form.Select>
+
       </div>
       <Button variant="primary" onClick={onNext}>
         Next
@@ -208,12 +237,13 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
     </Form>
   );
 };
-function createHosting ({ show, onHide }: createHostingProps) {
+function createHosting ({ show, onHide, editing = false, initialData, onHostCreated }: createHostingProps) {
   const [step, setStep] = useState(1);
   const [images, setImages] = useState<string[]>([]);
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [price, setPrice] = useState('');
+  const [propertyType, setPropertyType] = useState('');
   const [bathroomNumber, setBathroomNumber] = useState('');
   const [amenities, setAmenities] = useState<Amenities>({
     Wifi: false,
@@ -225,13 +255,13 @@ function createHosting ({ show, onHide }: createHostingProps) {
     Dryer: false,
   });
   const [bedrooms, setBedrooms] = useState<Bedroom[]>([]);
-
   const resetForm = () => {
     setTitle('');
     setAddress('');
     setPrice('');
     setImages([]);
     setBathroomNumber('');
+    setPropertyType('');
     setBedrooms([]);
     setAmenities({
       Wifi: false,
@@ -278,29 +308,72 @@ function createHosting ({ show, onHide }: createHostingProps) {
       resetForm();
     }
   }, [show]);
+  useEffect(() => {
+    if (editing && initialData) {
+      setTitle(initialData.title);
+      setAddress(initialData.address);
+      setPrice(initialData.price);
+      setImages(initialData.thumbnail);
+      setPropertyType(initialData.metadata.propertyType);
+      setBathroomNumber(initialData.metadata.bathroomNumber);
+      setBedrooms(initialData.metadata.bedrooms);
+      setAmenities({
+        Wifi: initialData.metadata.amenities.includes('Wifi'),
+        TV: initialData.metadata.amenities.includes('TV'),
+        Kitchen: initialData.metadata.amenities.includes('Kitchen'),
+        AirConditioning: initialData.metadata.amenities.includes('AirConditioning'),
+        Heating: initialData.metadata.amenities.includes('Heating'),
+        WashingMachine: initialData.metadata.amenities.includes('WashingMachine'),
+        Dryer: initialData.metadata.amenities.includes('Dryer'),
+      });
+    }
+  }, [editing, initialData]);
   const createHostingRequest = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     const metaData = {
+      propertyType,
       bathroomNumber,
       bedrooms,
       amenities: Object.keys(amenities).filter((key): key is keyof Amenities => amenities[key as keyof Amenities]),
     };
-    const response = await fetch('http://localhost:5005/listings/new', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ title, address, price, thumbnail: images, metadata: metaData })
-    });
-    const data = await response.json();
-    console.log(data);
-    if (data.error) {
-      alert(data.error);
-    } else {
-      alert('Create successfully');
-      onHide();
-      setStep(1);
+    if (editing && initialData) {
+      const response = await fetch(`http://localhost:5005/listings/${initialData.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ title, address, price, thumbnail: images, metadata: metaData })
+      });
+      const data = await response.json();
+      console.log(data);
+      if (data.error) {
+        alert(data.error);
+      } else {
+        alert('Modify successfully');
+        onHide();
+        onHostCreated && onHostCreated(); // 调用回调函数
+        setStep(1);
+      }
+    }
+    if (!editing) {
+      const response = await fetch('http://localhost:5005/listings/new', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ title, address, price, thumbnail: images, metadata: metaData })
+      });
+      const data = await response.json();
+      if (data.error) {
+        alert(data.error);
+      } else {
+        alert('Create successfully');
+        onHide();
+        onHostCreated && onHostCreated(); // 调用回调函数
+        setStep(1);
+      }
     }
   }
   const handleNextStep = () => {
@@ -310,7 +383,6 @@ function createHosting ({ show, onHide }: createHostingProps) {
       setStep(1);
     }
   };
-
   const handlePreviousStep = () => {
     if (step > 1) {
       setStep(step - 1);
@@ -329,8 +401,11 @@ function createHosting ({ show, onHide }: createHostingProps) {
               title={title}
               address={address}
               price={price}
+              propertyType={propertyType}
+              setPropertyType={setPropertyType}
               setTitle={setTitle}
               setAddress={setAddress}
+              setImages={setImages}
               setPrice={setPrice}
               onNext={handleNextStep}
               handleFileChange={handleFileChange}
