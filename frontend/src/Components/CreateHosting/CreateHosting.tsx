@@ -3,6 +3,7 @@ import { Modal } from 'react-bootstrap';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import { UploadFile } from 'antd/es/upload/interface';
+import { useParams } from 'react-router-dom';
 
 interface Amenities {
   Wifi: boolean;
@@ -36,7 +37,7 @@ interface Listing {
   };
 }
 
-type createHostingProps = {
+export type createHostingProps = {
   show: boolean;
   onHide: () => void; // Assuming no parameters can pass to this function
   editing?: boolean; // 新增：标识是否为编辑模式
@@ -45,7 +46,7 @@ type createHostingProps = {
 };
 function createHosting ({ show, onHide, editing = false, initialData, onHostCreated }: createHostingProps) {
   const [step, setStep] = useState(1);
-  const [images, setImages] = useState<string[]>([]); // 保持 images 为 string[] 类型
+  const [images, setImages] = useState<string[]>([]); // 存储 Base64 编码的图片
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [price, setPrice] = useState('');
@@ -174,23 +175,42 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       url: image,
     }));
   };
-  const handleFileListChange = (newFileList: UploadFile<any>[]) => {
-    // 转换为 string[] 类型的 URL 数组
-    const newImages = newFileList.map(file => {
-      if (file.url) {
-        return file.url;
-      } else if (file.originFileObj) {
-        return URL.createObjectURL(file.originFileObj);
-      }
-      return '';
-    }).filter(url => url !== '');
-    setImages(newImages);
+  const handleUploadChange = (newFileList: UploadFile<any>[]) => {
+    const newImagesPromises = newFileList.map(file => {
+      return new Promise<string>((resolve, reject) => {
+        if (file.originFileObj) {
+          const reader = new FileReader();
+          reader.onload = e => {
+            if (e.target && e.target.result) {
+              resolve(e.target.result as string);
+            } else {
+              reject(new Error('FileReader did not return a result'));
+            }
+          };
+          reader.onerror = error => reject(error);
+          reader.readAsDataURL(file.originFileObj);
+        } else if (file.url) {
+          // 如果文件已经有 URL（例如，编辑现有列表时），直接使用它
+          resolve(file.url);
+        } else {
+          reject(new Error('No file to read'));
+        }
+      });
+    });
+
+    Promise.all(newImagesPromises)
+      .then(newImages => {
+        setImages(newImages);
+      })
+      .catch(error => {
+        console.error('Error converting images to Base64', error);
+      });
   };
   return (
     <>
       <Modal show={show} onHide={onHide}>
         <Modal.Header closeButton>
-          <Modal.Title>Welcome to Airbnb</Modal.Title>
+          <Modal.Title>{editing ? 'Edit Host' : 'Welcome to Airbnb'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {step === 1 && (
@@ -205,7 +225,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
               setAddress={setAddress}
               setPrice={setPrice}
               onNext={handleNextStep}
-              onFileListChange={handleFileListChange}
+              onFileListChange={handleUploadChange}
             />
           )}
           {step === 2 && (

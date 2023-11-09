@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { StarOutlined } from '@ant-design/icons';
-import { List, Space } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { List, Space, Button } from 'antd';
 import HostingListImage from '../HostingListImage/HostingListImage';
 import { BiSolidBath, BiSolidBed } from 'react-icons/bi';
 import './index.css';
 import CreateHosting from '../../CreateHosting/CreateHosting';
-import { Bedroom, HostingListProps, Listing, ListingDetails, Review } from './HostingListInterface';
+import { HostingListProps, Listing } from './HostingListInterface';
+import PublishModal from '../PublishModal';
+import fetchListings from '../fetchListings';
+import { RangePickerProps } from 'antd/es/date-picker';
 
-const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
+export const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   <Space>
     {React.createElement(icon)}
     {text}
@@ -19,25 +23,20 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
   const [isLoading, setIsLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentEditingHost, setCurrentEditingHost] = useState<Listing | null>(null);
+  const currentUserEmail = localStorage.getItem('currentUserEmail');
+
+  const navigate = useNavigate();
+
   const handleTitleClick = (hostData: Listing) => {
     setCurrentEditingHost(hostData);
     setShowEditModal(true);
+    navigate(`/edit-hosting/${hostData.id}`); // 更新路由
   };
 
   const handleCloseEditModal = () => {
     setShowEditModal(false);
     setCurrentEditingHost(null);
-  };
-  const calculateTotalBeds = (bedrooms: Bedroom[]): number => {
-    return bedrooms.reduce((total, bedroom) => {
-      return total + bedroom.beds.reduce((bedTotal, bed) => bedTotal + bed.count, 0);
-    }, 0);
-  };
-
-  const calculateAverageRating = (reviews: Review[]): number => {
-    if (reviews.length === 0) return 0;
-    const totalRating = reviews.reduce((total, review) => total + review.star, 0);
-    return totalRating / reviews.length;
+    navigate('/hosting/');
   };
   const handleDelete = async (listingId: number) => {
     try {
@@ -58,60 +57,48 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
       alert('Failed to delete listing.');
     }
   };
-  const fetchListings = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('http://localhost:5005/listings', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json() as { listings: Listing[], error?: string };
-      if (data.error) {
-        throw new Error(data.error);
-      } else {
-        console.log('Initial data:', data); // 日志输出：初始数据
-        const listingsWithDetails: Listing[] = await Promise.all(
-          data.listings.map(async (listing): Promise<Listing> => {
-            try {
-              const detailsResponse = await fetch(`http://localhost:5005/listings/${listing.id}`);
-              const detailsJson = await detailsResponse.json();
-              if (detailsJson.error) {
-                throw new Error(detailsJson.error);
-              } else {
-                const detailsData = detailsJson.listing as ListingDetails;
-                console.log('Details data:', detailsData); // 日志输出：详细数据
-                return {
-                  ...listing,
-                  ...detailsData,
-                  totalBeds: calculateTotalBeds(detailsData.metadata.bedrooms),
-                  averageRating: calculateAverageRating(detailsData.reviews),
-                };
-              }
-            } catch (error) {
-              console.error(`Failed to fetch details for listing ${listing.id}:`, error);
-              return listing;
-            }
-          })
-        );
-        console.log('Listings with details:', listingsWithDetails);
-        setListings(listingsWithDetails);
-      }
-    } catch (error) {
-      console.error('Failed to fetch listings:', error);
-      alert('Failed to load listings.');
-    }
-    setIsLoading(false);
-  };
 
   useEffect(() => {
-    fetchListings();
+    fetchListings({ setIsLoading, setListings });
   }, []);
   useEffect(() => {
-    fetchListings();
+    fetchListings({ setIsLoading, setListings });
   }, [refreshList]);
   console.log('Listings:', listings);
+  const [publishModalVisible, setPublishModalVisible] = useState(false);
+  const [currentListingId, setCurrentListingId] = useState<number>(0);
+
+  const handlePublish = (id: number) => {
+    setCurrentListingId(id);
+    setPublishModalVisible(true);
+  };
+
+  const handleUnpublish = async (id: number) => {
+    try {
+      await fetch(`http://localhost:5005/listings/unpublish/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+      });
+      alert('Unpublish successfully');
+      fetchListings({ setIsLoading, setListings });
+    } catch (error) {
+      console.error('Failed to unpublish listing:', error);
+      alert('Failed to unpublish listing.');
+    }
+  };
+
+  const handleModalOk = (selectedDates: RangePickerProps['value']) => {
+    if (!currentListingId || !selectedDates) return;
+    setPublishModalVisible(false);
+    fetchListings({ setIsLoading, setListings });
+  };
+
+  const handleModalCancel = () => {
+    setPublishModalVisible(false);
+  };
   return (
     <>
       {isLoading
@@ -124,7 +111,11 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                 pageSize: 3,
               }}
               dataSource={listings}
-              renderItem={(item: Listing) => (
+              renderItem={(item: Listing) => {
+                if (item.owner !== currentUserEmail) {
+                  return null;
+                }
+                return (
                 <>
                   <List.Item
                     key={item.id}
@@ -142,15 +133,25 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                           <div className={'bedBathBox'}>
                             <div><BiSolidBed/> {item.totalBeds}</div>
                             <div><BiSolidBath/> {item.metadata.bathroomNumber}</div>
-                            <div>Online: {item.published ? 'Yes' : 'No'}</div>
                           </div>
                         </>
                       }
                     />
-                    <button onClick={() => handleDelete(item.id)}>Delete</button> {/* 删除按钮 */}
+                    <Button danger onClick={() => handleDelete(item.id)}>Delete</Button> {/* 删除按钮 */}
+                    {item.published
+                      ? <Button onClick={() => handleUnpublish(item.id)}>Unpublish</Button>
+                      : <Button onClick={() => handlePublish(item.id)}>Publish</Button>
+                    }
                   </List.Item>
+                  <PublishModal
+                    visible={publishModalVisible}
+                    onOk={handleModalOk}
+                    onCancel={handleModalCancel}
+                    currentHostId={currentListingId}
+                  />
                 </>
-              )}
+                );
+              }}
             />
           )}
       {showEditModal && currentEditingHost && (

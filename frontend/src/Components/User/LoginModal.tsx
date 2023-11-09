@@ -14,7 +14,6 @@ function LoginModal ({ show, onHide }: LoginModalProps) {
   const [userEmail, setUserEmail] = React.useState('');
   const [userPassword, setUserPassword] = React.useState('');
   const { isLoggedIn, setIsLoggedIn } = useAuth();
-
   const defaultUserLoginRequest = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     const response = await fetch('http://localhost:5005/user/auth/login', {
@@ -31,6 +30,7 @@ function LoginModal ({ show, onHide }: LoginModalProps) {
     } else {
       alert('Login successfully');
       localStorage.setItem('token', data.token);
+      localStorage.setItem('currentUserEmail', userEmail);
       setIsLoggedIn(true);
       onHide();
     }

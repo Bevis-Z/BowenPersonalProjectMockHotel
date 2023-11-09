@@ -49,6 +49,10 @@ const StepOne: React.FC<StepOneProps> = ({ images, title, address, price, setTit
           listType="picture-card"
           fileList={images}
           onChange={({ fileList }) => onFileListChange(fileList)}
+          showUploadList={{
+            showPreviewIcon: false, // 隐藏预览图标
+            showRemoveIcon: true
+          }}
         >
           {images.length >= 8 ? null : uploadButton}
         </Upload>
