@@ -40,6 +40,7 @@ const HostingListImage: React.FC<HostingListImageProps> = ({ thumbnails }) => {
             src={ 'https://a0.muscache.com/im/pictures/miso/Hosting-747560259841294213/original/986b4fb6-4c99-4de2-908b-7c2cdcd6568b.jpeg?im_w=720' } // 使用默认图片
             alt="Default Slide"
           />
+          <div className="carousel-text">Default Image</div>
         </div>
           )}
     </Carousel>

@@ -9,7 +9,6 @@ import CreateHosting from '../../CreateHosting/CreateHosting';
 import { HostingListProps, Listing } from './HostingListInterface';
 import PublishModal from '../PublishModal';
 import fetchListings from '../fetchListings';
-import { RangePickerProps } from 'antd/es/date-picker';
 
 export const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   <Space>
@@ -90,7 +89,7 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
     }
   };
 
-  const handleModalOk = (selectedDates: RangePickerProps['value']) => {
+  const handleModalOk = (selectedDates: string[]) => {
     if (!currentListingId || !selectedDates) return;
     setPublishModalVisible(false);
     fetchListings({ setIsLoading, setListings });

@@ -25,12 +25,12 @@ export interface Listing {
   owner: string;
   address: string;
   thumbnail: string[];
-  price: string;
+  price: number;
   reviews: Review[];
-  totalBeds?: number; // 新增字段，床位总数
-  averageRating?: number; // 新增字段，平均评分
+  totalBeds: number; // 新增字段，床位总数
+  averageRating: number; // 新增字段，平均评分
   metadata: Metadata;
-  availability?: boolean; // 根据您的实际数据类型调整
+  availability: string[]; // 根据您的实际数据类型调整
   published: boolean;
   postedOn: string | null;
 }
@@ -39,11 +39,11 @@ export interface ListingDetails {
   title: string;
   owner: string;
   address: string;
-  price: string;
+  price: number;
   thumbnail: string[];
   metadata: Metadata;
   reviews: Review[];
-  availability?: boolean; // 根据您的实际数据类型调整
+  availability: string[]; // 根据您的实际数据类型调整
   published: boolean;
   postedOn: string | null;
 }

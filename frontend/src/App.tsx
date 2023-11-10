@@ -9,18 +9,35 @@ import { AuthProvider } from './AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // eslint-disable-next-line import/extensions
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import ListingDetail from './Components/ListingDetail/ListingDetail';
 
 // 在 PublicHostingList 组件中
 export interface SearchFilters {
   searchText: string;
   minBedrooms: number | null;
   maxBedrooms: number | null;
-
+  startDate: Date | null;
+  endDate: Date | null;
+  minPrice: number | null;
+  maxPrice: number | null;
+  minRating: number | null;
+  maxRating: number | null;
 }
+const initialSearchFilters: SearchFilters = {
+  searchText: '',
+  minBedrooms: null,
+  maxBedrooms: null,
+  startDate: null,
+  endDate: null,
+  minPrice: null,
+  maxPrice: null,
+  minRating: null,
+  maxRating: null,
+};
 function App () {
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchFilters, setSearchFilters] = useState<SearchFilters>(/* 初始值 */);
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>(initialSearchFilters);
 
   const handleSearch = (filters: SearchFilters) => {
     setSearchFilters(filters);
@@ -65,9 +82,10 @@ function App () {
     <AuthProvider>
       <Navbar onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} onSearch={handleSearch}/>
       <Routes location={backgroundLocation || location}>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage searchFilters={searchFilters} />} />
         <Route path="/hosting" element={<Hosting />} />
         <Route path="/edit-hosting/:id" element={<Hosting />} />
+        <Route path="/listing/:id" element={ <ListingDetail /> } />
       </Routes>
       {/* When the current path equal to 'login' show loginModal */}
       {showLoginModal && (

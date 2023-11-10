@@ -8,12 +8,12 @@ interface StepOneProps {
   images: UploadFile<any>[];
   title: string;
   address: string;
-  price: string;
+  price: number;
   propertyType: string;
   setTitle: (value: string) => void;
   setPropertyType: (value: string) => void;
   setAddress: (value: string) => void;
-  setPrice: (value: string) => void;
+  setPrice: (value: number) => void;
   onNext: () => void;
   onFileListChange: (files: UploadFile[]) => void;
 }
@@ -39,7 +39,7 @@ const StepOne: React.FC<StepOneProps> = ({ images, title, address, price, setTit
       </div>
       <div>
         <label>Price</label>
-        <Form.Control type="text" onChange={(event) => setPrice(event.target.value)} className="form-control"
+        <Form.Control type="text" onChange={(event) => setPrice(parseInt(event.target.value, 10))} className="form-control"
                       value={price}/>
       </div>
       <div className="mb-3">

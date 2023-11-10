@@ -5,6 +5,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaBars, FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../../AuthContext';
 import { SearchFilters } from '../../App';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+
+const { RangePicker } = DatePicker;
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -14,15 +18,50 @@ type NavbarProps = {
 
 function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
   const [searchText, setSearchText] = useState('');
+  const [minBedrooms, setMinBedrooms] = useState<number | null>(null);
+  const [maxBedrooms, setMaxBedrooms] = useState<number | null>(null);
+  const [dateRange, setDateRange] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([null, null]);
+  const [minPrice, setMinPrice] = useState<number | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [minRating, setMinRating] = useState<number | null>(null);
+  const [maxRating, setMaxRating] = useState<number | null>(null);
   const location = useLocation();
   const isRootPath = location.pathname === '/';
   const { isLoggedIn, setIsLoggedIn } = useAuth();
 
-  const handleSearch = () => {
+  const handleReset = () => {
+    setSearchText('');
+    setMinBedrooms(null);
+    setMaxBedrooms(null);
+    setDateRange([null, null]);
+    setMinPrice(null);
+    setMaxPrice(null);
+    setMinRating(null);
+    setMaxRating(null);
+    onSearch({
+      searchText: '',
+      minBedrooms: null,
+      maxBedrooms: null,
+      startDate: null,
+      endDate: null,
+      minPrice: null,
+      maxPrice: null,
+      minRating: null,
+      maxRating: null,
+    });
+  };
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // 阻止表单默认行为
     const filters: SearchFilters = {
       searchText,
-      minBedrooms: 0,
-      maxBedrooms: 0
+      minBedrooms,
+      maxBedrooms,
+      startDate: dateRange[0] ? dateRange[0].toDate() : null,
+      endDate: dateRange[1] ? dateRange[1].toDate() : null,
+      minPrice,
+      maxPrice,
+      minRating,
+      maxRating,
     };
     onSearch(filters);
   };
@@ -54,10 +93,36 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
             alt="" width="auto" height="36" className="d-inline-block align-text-top" />
         </Link>
         {isRootPath && (
-          <form className="d-flex" role="search">
-            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" value={searchText}
-                   onChange={(e) => setSearchText(e.target.value)}></input>
-            <button className="btn btn-outline-success" type="submit" onClick={handleSearch}>Search</button>
+          <form className="d-flex" onSubmit={handleSearch} role="search">
+            <input className="form-control me-2" type="search" placeholder="Search" value={searchText}
+                   onChange={(e) => setSearchText(e.target.value)} />
+            <input
+              className="form-control me-2"
+              type="number"
+              placeholder="Min Bedrooms"
+              value={minBedrooms || ''}
+              onChange={(e) => setMinBedrooms(e.target.value ? parseInt(e.target.value, 10) : null)}
+            />
+            <input
+              className="form-control me-2"
+              type="number"
+              placeholder="Max Bedrooms"
+              value={maxBedrooms || ''}
+              onChange={(e) => setMaxBedrooms(e.target.value ? parseInt(e.target.value, 10) : null)}
+            />
+            <RangePicker
+              format="YYYY-MM-DD"
+              value={dateRange}
+              onChange={(dates) => setDateRange(dates || [null, null])}
+            />
+            {/* 价格范围输入框 */}
+            <input className="form-control me-2" type="number" placeholder="Min Price" value={minPrice || ''} onChange={(e) => setMinPrice(e.target.value ? parseInt(e.target.value, 10) : null)} />
+            <input className="form-control me-2" type="number" placeholder="Max Price" value={maxPrice || ''} onChange={(e) => setMaxPrice(e.target.value ? parseInt(e.target.value, 10) : null)} />
+            {/* 评分范围输入框 */}
+            <input className="form-control me-2" type="number" placeholder="Min Rating" value={minRating || ''} onChange={(e) => setMinRating(e.target.value ? parseInt(e.target.value, 10) : null)} />
+            <input className="form-control me-2" type="number" placeholder="Max Rating" value={maxRating || ''} onChange={(e) => setMaxRating(e.target.value ? parseInt(e.target.value, 10) : null)} />
+            <button className="btn btn-outline-success" type="submit">Search</button>
+            <button className="btn btn-outline-secondary ml-2" type="button" onClick={handleReset}>Reset</button>
           </form>
         )}
         <div className={'userButton dropdown'}>

@@ -1,4 +1,5 @@
 import { Bedroom, Listing, ListingDetails, Review } from './HostingList/HostingListInterface';
+import React from 'react';
 
 const calculateTotalBeds = (bedrooms: Bedroom[]): number => {
   return bedrooms.reduce((total, bedroom) => {

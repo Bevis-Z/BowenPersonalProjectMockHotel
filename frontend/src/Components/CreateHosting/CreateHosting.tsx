@@ -3,7 +3,6 @@ import { Modal } from 'react-bootstrap';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import { UploadFile } from 'antd/es/upload/interface';
-import { useParams } from 'react-router-dom';
 
 interface Amenities {
   Wifi: boolean;
@@ -27,7 +26,7 @@ interface Listing {
   id: number;
   title: string;
   address: string;
-  price: string;
+  price: number;
   thumbnail: string[];
   metadata: {
     propertyType: string;
@@ -49,7 +48,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
   const [images, setImages] = useState<string[]>([]); // 存储 Base64 编码的图片
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState(0);
   const [propertyType, setPropertyType] = useState('');
   const [bathroomNumber, setBathroomNumber] = useState('');
   const [amenities, setAmenities] = useState<Amenities>({
@@ -65,7 +64,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
   const resetForm = () => {
     setTitle('');
     setAddress('');
-    setPrice('');
+    setPrice(0);
     setImages([]);
     setBathroomNumber('');
     setPropertyType('');

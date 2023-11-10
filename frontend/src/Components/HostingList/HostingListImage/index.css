@@ -8,3 +8,17 @@
     text-align: center;
     background: #364d79;
 }
+
+.image-container {
+    position: relative;
+    text-align: center;
+}
+
+.carousel-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 20px;
+}
