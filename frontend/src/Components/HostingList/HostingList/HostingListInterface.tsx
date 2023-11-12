@@ -43,7 +43,7 @@ export interface ListingDetails {
   thumbnail: string[];
   metadata: Metadata;
   reviews: Review[];
-  availability: string[]; // 根据您的实际数据类型调整
+  availability: string[];
   published: boolean;
   postedOn: string | null;
 }
@@ -51,4 +51,13 @@ export interface ListingDetails {
 export interface HostingListProps {
   refreshList: boolean;
   onHostCreated: () => void;
+}
+
+export interface Booking {
+  id: number;
+  owner: string;
+  dateRange: [string, string];
+  totalPrice: number;
+  listingId: string;
+  status: string;
 }

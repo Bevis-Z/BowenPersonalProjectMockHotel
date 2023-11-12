@@ -1,0 +1,75 @@
+.listDetail {
+    padding: 2em 8em;
+    display: flex;
+    flex-direction: column;
+}
+.listDetail h1 {
+    font-size: 2em;
+}
+.listDetail h2 {
+    font-size: 1.6em;
+}
+
+.imageContent {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2em;
+    justify-content: space-between;
+}
+
+/* index.css.css.css */
+.listDetail .carousel-container {
+    width: 30em;
+    height: auto;
+}
+
+.listDetail .carousel-container .slick-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.addressDisplay {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.roomDetail {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+.typeScore {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.scoreBeds {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.confirmBooking {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.bookingCard {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Shadow effect */
+    transition: 0.3s; /* Adds a transition effect when hovering */
+    padding: 15px; /* Padding inside the card */
+    margin-left: 5em;
+    margin-bottom: 20px; /* Margin at the bottom of the card */
+    border-radius: 5px; /* Optional: Rounds the corners of the card */
+    background-color: #fff; /* Background color of the card */
+}
+
+.bookingCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4); /* Darker shadow on hover */
+}
+

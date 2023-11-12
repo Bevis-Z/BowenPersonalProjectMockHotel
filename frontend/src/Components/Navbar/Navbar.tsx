@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaBars, FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../../AuthContext';
 import { SearchFilters } from '../../App';
-import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
-
-const { RangePicker } = DatePicker;
+import SearchDropdownMenu from './SearcgDropdownMenu/SearchDropdownMenu';
+import { Dropdown } from 'react-bootstrap';
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -25,6 +24,7 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
   const [minRating, setMinRating] = useState<number | null>(null);
   const [maxRating, setMaxRating] = useState<number | null>(null);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const location = useLocation();
   const isRootPath = location.pathname === '/';
   const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -49,6 +49,7 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
       minRating: null,
       maxRating: null,
     });
+    setIsDropdownVisible(false); // 隐藏下拉菜单
   };
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 阻止表单默认行为
@@ -64,6 +65,7 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
       maxRating,
     };
     onSearch(filters);
+    setIsDropdownVisible(false); // 隐藏下拉菜单
   };
   const navigate = useNavigate();
   const userLogout = async () => {
@@ -85,45 +87,55 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
       navigate('/');
     }
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token); // Set to true if token exists, false otherwise
+  }, []);
+
+  const renderAvatar = () => {
+    if (isLoggedIn) {
+      return <FaUserCircle color={'#FF595F'} size="25px" />;
+    }
+    return <FaUserCircle color={'grey'} size="25px" />;
+  };
   return (
     <nav className="navbar navbar-expand-lg" id={'navBar'}>
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/" onClick={handleReset}>
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/1200px-Airbnb_Logo_B%C3%A9lo.svg.png"
             alt="" width="auto" height="36" className="d-inline-block align-text-top" />
         </Link>
         {isRootPath && (
-          <form className="d-flex" onSubmit={handleSearch} role="search">
-            <input className="form-control me-2" type="search" placeholder="Search" value={searchText}
-                   onChange={(e) => setSearchText(e.target.value)} />
-            <input
-              className="form-control me-2"
-              type="number"
-              placeholder="Min Bedrooms"
-              value={minBedrooms || ''}
-              onChange={(e) => setMinBedrooms(e.target.value ? parseInt(e.target.value, 10) : null)}
-            />
-            <input
-              className="form-control me-2"
-              type="number"
-              placeholder="Max Bedrooms"
-              value={maxBedrooms || ''}
-              onChange={(e) => setMaxBedrooms(e.target.value ? parseInt(e.target.value, 10) : null)}
-            />
-            <RangePicker
-              format="YYYY-MM-DD"
-              value={dateRange}
-              onChange={(dates) => setDateRange(dates || [null, null])}
-            />
-            {/* 价格范围输入框 */}
-            <input className="form-control me-2" type="number" placeholder="Min Price" value={minPrice || ''} onChange={(e) => setMinPrice(e.target.value ? parseInt(e.target.value, 10) : null)} />
-            <input className="form-control me-2" type="number" placeholder="Max Price" value={maxPrice || ''} onChange={(e) => setMaxPrice(e.target.value ? parseInt(e.target.value, 10) : null)} />
-            {/* 评分范围输入框 */}
-            <input className="form-control me-2" type="number" placeholder="Min Rating" value={minRating || ''} onChange={(e) => setMinRating(e.target.value ? parseInt(e.target.value, 10) : null)} />
-            <input className="form-control me-2" type="number" placeholder="Max Rating" value={maxRating || ''} onChange={(e) => setMaxRating(e.target.value ? parseInt(e.target.value, 10) : null)} />
-            <button className="btn btn-outline-success" type="submit">Search</button>
-            <button className="btn btn-outline-secondary ml-2" type="button" onClick={handleReset}>Reset</button>
-          </form>
+          <div className={'search-dropdown dropup'}>
+            <Dropdown className={'dropup-center'}>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                Search
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="centered-dropdown-menu">
+                <SearchDropdownMenu
+                  searchText={searchText}
+                  setSearchText={setSearchText}
+                  minBedrooms={minBedrooms}
+                  setMinBedrooms={setMinBedrooms}
+                  maxBedrooms={maxBedrooms}
+                  setMaxBedrooms={setMaxBedrooms}
+                  dateRange={dateRange}
+                  setDateRange={setDateRange}
+                  minPrice={minPrice}
+                  setMinPrice={setMinPrice}
+                  maxPrice={maxPrice}
+                  setMaxPrice={setMaxPrice}
+                  minRating={minRating}
+                  setMinRating={setMinRating}
+                  maxRating={maxRating}
+                  setMaxRating={setMaxRating}
+                  handleSearch={handleSearch}
+                  handleReset={handleReset}
+                />
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
         )}
         <div className={'userButton dropdown'}>
           <div className="nav-item">
@@ -143,9 +155,7 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
           </div>
           <button className="navbar-nav me-auto mb-2 mb-lg-0" data-bs-toggle="dropdown" id={'navUser'} >
             <FaBars />
-            <FaUserCircle
-              color={'grey'} size="25px"
-            />
+            {renderAvatar()}
           </button>
         </div>
       </div>

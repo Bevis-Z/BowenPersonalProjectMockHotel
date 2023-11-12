@@ -1,0 +1,18 @@
+/* BookingList.css */
+
+.booking-list-container {
+    margin-top: 20px; /* Adjust the top margin as needed */
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.booking-list-container h2 {
+    margin-bottom: 10px; /* Space between header and line */
+}
+
+.booking-list-container hr {
+    border: 0;
+    height: 1px;
+    background-color: #ccc; /* Line color */
+    margin-bottom: 20px; /* Space between line and list */
+}

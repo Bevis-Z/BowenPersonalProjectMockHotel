@@ -1,0 +1,22 @@
+.amenity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2em; /* Space between icon and text */
+    width: calc(50% - 5px); /* Adjust width to fit two items per row, accounting for gap */
+    margin: 0 0 1.5em 0;
+    height: 100%;
+    padding: 1.5em;
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    max-height: 120px; /* Adjust based on your row height (3 rows) */
+    overflow-y: auto; /* Enables vertical scrolling */
+}
+
+.amenities-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em; /* Adjust the space between items */
+}
+

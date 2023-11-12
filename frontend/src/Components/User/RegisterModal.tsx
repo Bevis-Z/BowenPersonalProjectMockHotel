@@ -2,6 +2,8 @@ import React from 'react';
 import { Form, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
+import { message } from 'antd';
+import './loginmodal.css';
 
 type RegisterModalProps = {
   show: boolean;
@@ -32,7 +34,7 @@ function RegisterModal ({ show, onHide }: RegisterModalProps) {
     if (data.error) {
       alert(data.error);
     } else {
-      alert('Register successfully');
+      message.success('Register successfully');
       localStorage.setItem('token', data.token);
       setIsLoggedIn(true);
       onHide();

@@ -1,8 +1,7 @@
-import { Modal, DatePicker } from 'antd';
+import { Modal, DatePicker, message } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import React, { useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-// ... 其他必要的导入 ...
 
 interface PublishModalProps {
   visible: boolean;
@@ -32,10 +31,9 @@ const PublishModal: React.FC<PublishModalProps> = ({ visible, onOk, onCancel, cu
         },
         body: JSON.stringify({ availability: dates })
       });
-      alert('Request sent successfully');
+      message.success('Publish successfully');
     } catch (error) {
-      console.error('Failed to send publish request:', error);
-      alert('Failed to send publish request.');
+      message.error('Failed to publish.');
     }
   };
   return (

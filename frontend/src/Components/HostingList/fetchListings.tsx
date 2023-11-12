@@ -1,5 +1,6 @@
 import { Bedroom, Listing, ListingDetails, Review } from './HostingList/HostingListInterface';
 import React from 'react';
+import { message } from 'antd';
 
 const calculateTotalBeds = (bedrooms: Bedroom[]): number => {
   return bedrooms.reduce((total, bedroom) => {
@@ -59,7 +60,7 @@ const fetchListings = async ({ setIsLoading, setListings }: FetchListingsProps) 
     }
   } catch (error) {
     console.error('Failed to fetch listings:', error);
-    alert('Failed to load listings.');
+    message.error('Failed to load listings.');
   }
   setIsLoading(false);
 };

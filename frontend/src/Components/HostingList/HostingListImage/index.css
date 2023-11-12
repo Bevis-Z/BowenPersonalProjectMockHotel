@@ -1,12 +1,11 @@
 .carousel-container {
-    width: 272px;
+    width: 18em;
     overflow: hidden;
 }
 
 .carousel-content {
-    height: 160px;
+    height: 18em;
     text-align: center;
-    background: #364d79;
 }
 
 .image-container {
@@ -20,5 +19,13 @@
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 20px;
+    font-size: 1.2em;
+}
+
+
+.ant-carousel .slick-dots li.slick-active button {
+    background: #364d79;
+}
+.ant-carousel .slick-dots li button {
+    background: #364d79;
 }

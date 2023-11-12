@@ -1,3 +1,11 @@
-.loginModal {
+.modal-dialog {
+    z-index: 999;
+}
+
+.ant-message {
     z-index: 9999;
+}
+
+.modal-dialog button {
+    margin-top: 1.5em;
 }

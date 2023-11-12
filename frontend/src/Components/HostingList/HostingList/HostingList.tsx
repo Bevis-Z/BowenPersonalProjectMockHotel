@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StarOutlined } from '@ant-design/icons';
+import StarOutlined from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { List, Space, Button } from 'antd';
+import { List, Space, Button, message } from 'antd';
 import HostingListImage from '../HostingListImage/HostingListImage';
 import { BiSolidBath, BiSolidBed } from 'react-icons/bi';
 import './index.css';
@@ -50,10 +50,10 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
       // Filter out the deleted listing from the state
       const updatedListings = listings.filter(listing => listing.id !== listingId);
       setListings(updatedListings);
-      alert('Listing deleted successfully');
+      message.success('Listing deleted successfully');
     } catch (error) {
       console.error('Failed to delete listing:', error);
-      alert('Failed to delete listing.');
+      message.error('Failed to delete listing.');
     }
   };
 
@@ -63,7 +63,6 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
   useEffect(() => {
     fetchListings({ setIsLoading, setListings });
   }, [refreshList]);
-  console.log('Listings:', listings);
   const [publishModalVisible, setPublishModalVisible] = useState(false);
   const [currentListingId, setCurrentListingId] = useState<number>(0);
 
@@ -81,11 +80,10 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
           Authorization: `Bearer ${localStorage.getItem('token')}`
         },
       });
-      alert('Unpublish successfully');
+      message.success('Unpublish successfully');
       fetchListings({ setIsLoading, setListings });
     } catch (error) {
-      console.error('Failed to unpublish listing:', error);
-      alert('Failed to unpublish listing.');
+      message.error('Failed to unpublish listing.');
     }
   };
 
@@ -141,6 +139,12 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                       ? <Button onClick={() => handleUnpublish(item.id)}>Unpublish</Button>
                       : <Button onClick={() => handlePublish(item.id)}>Publish</Button>
                     }
+                    <Button
+                      type="primary"
+                      onClick={() => navigate(`/bookings/${item.id}`, { state: { listing: item } })}
+                    >
+                      View Bookings
+                    </Button>
                   </List.Item>
                   <PublishModal
                     visible={publishModalVisible}

@@ -6,10 +6,7 @@ interface HostingListImageProps {
   thumbnails: string[]; // An array of thumbnail image URLs
 }
 const contentStyle: React.CSSProperties = {
-  margin: 0,
-  height: '18em',
   color: 'white',
-  lineHeight: '220px',
   textAlign: 'center',
   background: 'orange',
 };
@@ -20,7 +17,7 @@ const HostingListImage: React.FC<HostingListImageProps> = ({ thumbnails }) => {
   };
 
   return (
-    <Carousel className="carousel-container" afterChange={onChange}>
+    <Carousel className="carousel-container" id={'listImage'} afterChange={onChange}>
       {thumbnails.length > 0
         ? thumbnails.map((thumbnail, index) => (
           <div key={index}>

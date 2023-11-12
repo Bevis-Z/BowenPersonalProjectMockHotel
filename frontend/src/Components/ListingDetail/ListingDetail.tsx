@@ -1,22 +1,81 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { DatePicker, Button, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { DatePicker, Button, message, Card } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import HostingListImage from '../HostingList/HostingListImage/HostingListImage';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import type { RangeValue } from 'rc-picker/lib/interface';
+import { Booking } from '../HostingList/HostingList/HostingListInterface';
+import ReviewForm from './ReviewForm';
+import ReviewList from './ReviewList/ReviewList';
+import { BookingList } from './BookingList/BookingList';
+import './index.css';
+import { IconText } from '../HostingList/HostingList/HostingList';
+import { StarOutlined } from '@ant-design/icons';
+import { BiSolidBath, BiSolidBed } from 'react-icons/bi';
+import { MdBedroomParent } from 'react-icons/md';
+import { renderAmenities } from './RenderAmenities/RenderAmenities';
 
 const { RangePicker } = DatePicker;
 const ListingDetail: React.FC = () => {
+  const [userHasBooking, setUserHasBooking] = useState<boolean>(false);
+  const [userBookings, setUserBookings] = useState<Booking[]>([]); // Add a state to hold user bookings
   const location = useLocation();
   const listing = location.state?.listing;
   const searchFilters = location.state?.searchFilters;
   const [bookingDates, setBookingDates] = useState<RangePickerProps['value']>(null);
+
+  const currentUserEmail = localStorage.getItem('currentUserEmail');
+  const [userBookingId, setUserBookingId] = useState<number | null>(null);
+
+  const navigate = useNavigate();
+
+  const disabledDate = (current: Dayjs): boolean => {
+    return current && current < dayjs().startOf('day');
+  };
+  useEffect(() => {
+    if (searchFilters?.startDate && searchFilters?.endDate) {
+      const start = dayjs(searchFilters.startDate);
+      const end = dayjs(searchFilters.endDate);
+      if (start.isValid() && end.isValid()) {
+        setBookingDates([start, end]);
+      }
+    }
+  }, [searchFilters]);
   if (!listing) {
     return <div>Loading...</div>;
   }
-  console.log('Listing Details', listing);
+  const handleReviewSubmit = async (bookingId: number, score: number, userComment: string) => {
+    try {
+      const reviewPayload = {
+        review: {
+          star: score,
+          comment: userComment
+        }
+      };
+      const response = await fetch(`http://localhost:5005/listings/${listing.id}/review/${bookingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(reviewPayload)
+      });
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+      message.success('Review submitted successfully!');
+    } catch (error) {
+      message.error('Failed to submit review.');
+    }
+  };
   const handleBookingConfirm = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      message.error('Please login to book this listing.');
+      navigate('/login');
+      return;
+    }
     if (!bookingDates || !bookingDates[0] || !bookingDates[1]) {
       message.error('Please select the booking dates.');
       return;
@@ -27,7 +86,6 @@ const ListingDetail: React.FC = () => {
       bookingDates[1].toDate()
     );
 
-    // 发送请求
     try {
       const response = await fetch(`http://localhost:5005/bookings/new/${listing.id}`, {
         method: 'POST',
@@ -42,6 +100,7 @@ const ListingDetail: React.FC = () => {
         throw new Error(data.error || 'Failed to send booking request');
       }
       message.success('Booking confirmed!');
+      setBookingDates(null);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       message.error(errorMessage);
@@ -70,37 +129,76 @@ const ListingDetail: React.FC = () => {
         const data = await response.json();
         throw new Error(data.error || 'Failed to send booking request');
       }
-      message.success('Fetch Success');
-      console.log('Bookings:', await response.json());
+      const bookingData = await response.json();
+      const userBooking = bookingData.bookings.find((booking: Booking) =>
+        booking.owner === currentUserEmail && booking.listingId.toString() === listing.id.toString() && booking.status === 'accepted'
+      );
+      setUserHasBooking(!!userBooking);
+      setUserBookingId(userBooking ? userBooking.id : null);
+      console.log('userBookingId', bookingData);
+      const userBookingsForListing = bookingData.bookings.filter((booking: Booking) =>
+        booking.owner === currentUserEmail && booking.listingId.toString() === listing.id.toString()
+      );
+      setUserBookings(userBookingsForListing); // Update the state with the user's bookings for this listing
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      message.error(errorMessage);
+      message.error('Error fetching bookings');
     }
   }
-  fetchBookings();
+  if (localStorage.getItem('token')) {
+    useEffect(() => {
+      const interval = setInterval(() => {
+        fetchBookings();
+      }, 1000); // Set interval to 1 second
+
+      return () => clearInterval(interval);
+    }, [listing.id]);
+  }
   return (
-    <div>
-      <h1>{listing.title}</h1>
-      <HostingListImage thumbnails={listing.thumbnail} />
-      <p>Address: {listing.address}</p>
-      <p>{priceDisplay}</p>
-      <p>Type: {listing.metadata.propertyType}</p>
-      <p>Reviews: {/* ... */}</p>
-      <p>Rating: {listing.averageRating}</p>
-      <p>Bedrooms: {listing.metadata.bedrooms.length}</p>
-      <p>Beds: {listing.totalBeds}</p>
-      <p>Bathrooms: {listing.metadata.bathroomNumber}</p>
-      <RangePicker
-        format="YYYY-MM-DD"
-        onChange={handleBookingDatesChange}
-      />
-      <Button
-        type="primary"
-        onClick={handleBookingConfirm}
-        disabled={!bookingDates || !bookingDates[0] || !bookingDates[1]}
-      >
-        Confirm Booking
-      </Button>
+    <div className={'listDetail'}>
+      <h1>{listing.title} ({listing.metadata.propertyType})</h1>
+      <div className={'imageContent'}>
+        <HostingListImage thumbnails={listing.thumbnail} />
+        <Card className={'bookingCard'}>
+          <div className={'booking'}>
+            <h3>{listing.address}</h3>
+            <h6>{priceDisplay}</h6>
+            <div className={'scoreBeds'}>
+              <IconText icon={StarOutlined} text={`${listing.averageRating?.toFixed(1) || 'N/A'} (${listing.reviews.length} reviews)`} />
+              <div className={'roomDetail'}>
+                <p><MdBedroomParent/>{listing.metadata.bedrooms.length}</p>
+                <p><BiSolidBed/>{listing.totalBeds}</p>
+                <p><BiSolidBath/>{listing.metadata.bathroomNumber}</p>
+              </div>
+            </div>
+            <div className={'confirmBooking'}>
+              <RangePicker
+                format="YYYY-MM-DD"
+                onChange={handleBookingDatesChange}
+                value={bookingDates as [dayjs.Dayjs | null, dayjs.Dayjs | null]} // Ensure the value type aligns with what RangePicker expects
+                disabledDate={disabledDate} // Use the disabledDate function
+              />
+              <Button
+                type="primary"
+                onClick={handleBookingConfirm}
+                disabled={!bookingDates || !bookingDates[0] || !bookingDates[1]}
+              >
+                Confirm Booking
+              </Button>
+            </div>
+          </div>
+        </Card>
+        {userHasBooking && userBookingId && (
+          <ReviewForm userBookingId={userBookingId} onReviewSubmit={handleReviewSubmit} />
+        )}
+      </div>
+      <div className={'addressDisplay'}>
+        <h3>What this place offers</h3>
+        <div className="amenities">
+          {renderAmenities(listing.metadata.amenities)}
+        </div>
+      </div>
+      <ReviewList reviews={listing.reviews} />
+      <BookingList userBookings={userBookings} />
     </div>
   );
 };

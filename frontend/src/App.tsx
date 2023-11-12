@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // eslint-disable-next-line import/extensions
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ListingDetail from './Components/ListingDetail/ListingDetail';
+import BookingDetails from './Components/BookingDetails/BookingDetails';
 
 // 在 PublicHostingList 组件中
 export interface SearchFilters {
@@ -86,6 +87,7 @@ function App () {
         <Route path="/hosting" element={<Hosting />} />
         <Route path="/edit-hosting/:id" element={<Hosting />} />
         <Route path="/listing/:id" element={ <ListingDetail /> } />
+        <Route path="/bookings/:listingId" element={<BookingDetails />} />
       </Routes>
       {/* When the current path equal to 'login' show loginModal */}
       {showLoginModal && (

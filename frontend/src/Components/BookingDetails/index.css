@@ -1,0 +1,41 @@
+.bookingDetails {
+    padding: 2em 6em;
+}
+
+.yearDisplay {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.chartsDisplay {
+    padding-top: 1em;
+}
+
+.liquidDisplay {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+    padding: 1em;
+    box-sizing: border-box;
+    border: 0.3px solid darkgrey;
+    justify-content: center;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ant-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.liquid-chart-container {
+    width: 25em;
+    height: 25em;
+}
+
+.bookingHistory {
+    padding: 2em 0;
+}

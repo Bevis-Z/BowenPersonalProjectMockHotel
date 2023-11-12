@@ -1,0 +1,40 @@
+
+
+
+.dropDownList .d-flex {
+    display: flex!important;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 1.5em;
+    padding-top: 1em;
+    gap: 0.4em;
+    width: 20em;
+    justify-content: center;
+}
+.me-2 {
+    margin-right: 0!important;
+}
+.search-dropdown .centered-dropdown-menu {
+    height: 20em;
+    width: 22em;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    gap: 1em;
+}
+
+.bedSearch, .priceSearch, .ratingSearch{
+    display: flex;
+    flex-direction: row;
+}
+
+.controlBox {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2em;
+    justify-content: space-between;
+    gap:2em
+}
+.dropDownList .ant-picker {
+    width: 100%;
+}

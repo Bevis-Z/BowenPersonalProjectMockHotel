@@ -13,10 +13,14 @@
     align-items: center;
 }
 
-
 #navBar .container-fluid form {
     justify-content: center;
 
+}
+
+#dropdown-basic {
+    background-color: #FF595F;
+    border: none;
 }
 
 #navBar .container-fluid .userButton {

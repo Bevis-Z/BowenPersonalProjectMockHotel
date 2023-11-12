@@ -3,6 +3,7 @@ import { Form, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 import './loginmodal.css';
+import { message } from 'antd';
 
 // Define a type for the LoginModal props
 type LoginModalProps = {
@@ -26,9 +27,9 @@ function LoginModal ({ show, onHide }: LoginModalProps) {
     const data = await response.json();
     console.log(data);
     if (data.error) {
-      alert(data.error);
+      message.error(data.error);
     } else {
-      alert('Login successfully');
+      message.success('Login successfully');
       localStorage.setItem('token', data.token);
       localStorage.setItem('currentUserEmail', userEmail);
       setIsLoggedIn(true);
@@ -50,10 +51,10 @@ function LoginModal ({ show, onHide }: LoginModalProps) {
             <label>Password</label>
             <Form.Control type="password" onChange={(event) => setUserPassword(event.target.value)} className="form-control" id="inputUserPassword" value={userPassword}/>
           </div>
+          <Link to={'/register'}>Register Now</Link>
           <div>
             <button type="submit" className="btn btn-primary" onClick={ defaultUserLoginRequest }>Login</button>
           </div>
-          <Link to={'/register'}>Register Now</Link>
         </Form>
       </Modal.Body>
     </Modal>

@@ -3,6 +3,7 @@ import { Modal } from 'react-bootstrap';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import { UploadFile } from 'antd/es/upload/interface';
+import { message } from 'antd';
 
 interface Amenities {
   Wifi: boolean;
@@ -124,11 +125,10 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
         body: JSON.stringify({ title, address, price, thumbnail: images, metadata: metaData })
       });
       const data = await response.json();
-      console.log(data);
       if (data.error) {
-        alert(data.error);
+        message.error(data.error);
       } else {
-        alert('Modify successfully');
+        message.success('Modify successfully');
         onHide();
         onHostCreated && onHostCreated(); // 调用回调函数
         setStep(1);
@@ -145,9 +145,9 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       });
       const data = await response.json();
       if (data.error) {
-        alert(data.error);
+        message.error(data.error);
       } else {
-        alert('Create successfully');
+        message.success('Create successfully');
         onHide();
         onHostCreated && onHostCreated();
         setStep(1);
@@ -201,9 +201,6 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       .then(newImages => {
         setImages(newImages);
       })
-      .catch(error => {
-        console.error('Error converting images to Base64', error);
-      });
   };
   return (
     <>
