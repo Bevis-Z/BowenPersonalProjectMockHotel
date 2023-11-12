@@ -66,6 +66,7 @@
     margin-left: 5em;
     margin-bottom: 20px; /* Margin at the bottom of the card */
     border-radius: 5px; /* Optional: Rounds the corners of the card */
+    width: 25em;
     background-color: #fff; /* Background color of the card */
 }
 
@@ -73,3 +74,25 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4); /* Darker shadow on hover */
 }
 
+.reviewCard {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Shadow effect */
+    transition: 0.3s; /* Adds a transition effect when hovering */
+    padding: 15px; /* Padding inside the card */
+    margin-left: 5em;
+    margin-bottom: 20px; /* Margin at the bottom of the card */
+    border-radius: 5px; /* Optional: Rounds the corners of the card */
+    width: 25em;
+    background-color: #fff; /* Background color of the card */
+}
+
+.reviewCard .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.reviewCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4); /* Darker shadow on hover */
+}

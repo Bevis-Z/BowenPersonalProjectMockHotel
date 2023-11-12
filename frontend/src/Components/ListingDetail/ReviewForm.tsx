@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from 'antd';
+import { Button, Card } from 'antd';
+import './index.css';
 
 interface ReviewFormProps {
   userBookingId: number;
@@ -15,8 +16,8 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ userBookingId, onReviewS
   };
 
   return (
-    <div>
-      <h3>Leave a Review</h3>
+    <Card hoverable className={'reviewCard'}>
+      <h3>Make a Review</h3>
       <input
         type="number"
         placeholder="Score (1-5)"
@@ -29,7 +30,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ userBookingId, onReviewS
         onChange={(e) => setReviewComment(e.target.value)}
       />
       <Button type="primary" onClick={handleSubmit}>Submit Review</Button>
-    </div>
+    </Card>
   );
 };
 
