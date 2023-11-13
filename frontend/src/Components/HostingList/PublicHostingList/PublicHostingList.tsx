@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Listing } from '../HostingList/HostingListInterface';
+import { Booking, Listing } from '../HostingList/HostingListInterface';
 import fetchListings from '../fetchListings';
 import { Card, Spin } from 'antd';
 import HostingListImage from '../HostingListImage/HostingListImage';
@@ -28,9 +28,41 @@ function PublicHostingList ({ searchFilters }: PublicHostingListProps) {
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filtered, setFiltered] = useState<Listing[]>([]);
+  const [userBookings, setUserBookings] = useState<Booking[]>([]);
 
-  const navigate = useNavigate(); // 使用 react-router-dom 的 useNavigate 钩子
+  const currentUserEmail = localStorage.getItem('currentUserEmail');
+  const token = localStorage.getItem('token');
 
+  const fetchBookings = async () => {
+    try {
+      const response = await fetch('http://localhost:5005/bookings/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch bookings');
+      }
+      const bookingData = await response.json();
+      const userBookings = bookingData.bookings.filter((booking: Booking) =>
+        booking.owner === currentUserEmail && (booking.status === 'accepted' || booking.status === 'pending')
+      );
+      setUserBookings(userBookings); // Update the state with the user's relevant bookings
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      // Handle error (e.g., display a message to the user)
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchBookings(); // Fetch bookings only if user is logged in
+    }
+  }, [token]);
+  const navigate = useNavigate();
   const handleListingClick = (listing:Listing) => {
     navigate(`/listing/${listing.id}`, { state: { listing, searchFilters } });
   };
@@ -38,15 +70,20 @@ function PublicHostingList ({ searchFilters }: PublicHostingListProps) {
   useEffect(() => {
     const fetchAndSortListings = async () => {
       await fetchListings({ setIsLoading, setListings });
-      setListings(prevListings =>
-        [...prevListings].sort((a, b) =>
-          a.title.localeCompare(b.title)
-        )
-      );
-    };
 
+      setListings(prevListings => {
+        const userBookingIds = userBookings.map(booking => booking.listingId);
+        const userBookingListings = prevListings.filter(listing => userBookingIds.includes(listing.id.toString()));
+        const otherListings = prevListings.filter(listing => !userBookingIds.includes(listing.id.toString()));
+
+        return [
+          ...userBookingListings.sort((a, b) => a.title.localeCompare(b.title)),
+          ...otherListings.sort((a, b) => a.title.localeCompare(b.title))
+        ];
+      });
+    };
     fetchAndSortListings();
-  }, [searchFilters]);
+  }, [searchFilters, userBookings]);
 
   useEffect(() => {
     // 筛选逻辑
@@ -89,19 +126,31 @@ function PublicHostingList ({ searchFilters }: PublicHostingListProps) {
 
   return (
     <div className={'publicListing'}>
-      {filtered.map((item) => (
+      {filtered.map((item) => {
+        const hasUserBooking = userBookings.some(booking =>
+          booking.listingId === item.id.toString() &&
+          (booking.status === 'accepted' || booking.status === 'pending')
+        );
+
+        // Append '(Booking)' to the title if the above condition is true
+        const listingTitle = hasUserBooking ? `${item.title} (Booking)` : item.title;
+
+        return (
         <div key={item.id} className={'publicHost'} onClick={() => handleListingClick(item)}>
           <Card
             hoverable
             cover={
-              <HostingListImage thumbnails={item.thumbnail} />
+              <HostingListImage thumbnails={item.thumbnail}/>
             }
           >
           </Card>
-          <h4>{item.title}</h4>
-          <IconText icon={StarOutlined} text={`${item.averageRating?.toFixed(1) || 'N/A'} (${item.reviews.length} reviews)`} key="list-vertical-star-o" />
+          <h4>{listingTitle}</h4>
+          <IconText icon={StarOutlined}
+                    text={`${item.averageRating?.toFixed(1) || 'N/A'} (${item.reviews.length} reviews)`}
+                    key="list-vertical-star-o"/>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
