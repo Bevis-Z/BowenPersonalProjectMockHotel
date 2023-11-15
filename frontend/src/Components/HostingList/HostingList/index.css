@@ -2,3 +2,35 @@
     display: flex;
     align-items: center;
 }
+
+#viewBooking {
+    margin-left: 2em;
+}
+
+.custom-empty-data {
+    margin-top: 8em;
+}
+
+@media (max-width: 1050px) {
+    #viewBooking {
+        margin-left: 0.2em;
+        margin-top: 0.2em;
+    }
+}
+
+
+
+@media (max-width: 650px) {
+    #viewBooking {
+        margin-left: 0.2em;
+        margin-top: 0.2em;
+    }
+    .publishBtn {
+        margin-top: 0.2em;
+    }
+
+    .ant-list-item {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+}

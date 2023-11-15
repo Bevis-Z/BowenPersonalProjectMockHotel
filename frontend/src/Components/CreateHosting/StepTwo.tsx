@@ -1,5 +1,7 @@
-import React from 'react';
-import { Button, Form } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
+import './index.css';
+import { Input, Button } from 'antd';
 
 type Bed = {
   count: number;
@@ -7,7 +9,7 @@ type Bed = {
 };
 
 type Bedroom = {
-  type: string; // 你可以将这个改为具体的卧室类型，例如 'master' | 'guest' | '';
+  type: string;
   beds: Bed[];
 };
 interface Amenities {
@@ -31,6 +33,18 @@ interface StepTwoProps {
   onBack: () => void;
 }
 const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, setBathroomNumber, setBedrooms, setAmenities, onBack, createHostingRequest }) => {
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  // 当表单数据发生变化时，检查表单是否填写完整
+  useEffect(() => {
+    // 在这里编写检查逻辑
+    const isBathroomNumberValid = bathroomNumber.trim() !== '';
+    const areBedroomsValid = bedrooms.every(bedroom => bedroom.type !== '' && bedroom.beds.every(bed => bed.count > 0));
+    const areAmenitiesValid = Object.values(amenities).some(value => value === true);
+
+    // 设置状态变量以反映表单是否填写完整
+    setIsFormValid(isBathroomNumberValid && areBedroomsValid && areAmenitiesValid);
+  }, [bathroomNumber, bedrooms, amenities]);
   const addBedroom = (): void => {
     setBedrooms([...bedrooms, { type: '', beds: [{ count: 1, size: 'queen' }] }]);
   };
@@ -57,6 +71,19 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
     setBedrooms(newBedrooms);
   };
 
+  const removeBedroom = (bedroomIndex: number): void => {
+    const newBedrooms = [...bedrooms];
+    newBedrooms.splice(bedroomIndex, 1);
+    setBedrooms(newBedrooms);
+  };
+
+  const removeBed = (bedroomIndex: number, bedIndex: number): void => {
+    const bedroom = bedrooms[bedroomIndex];
+    if (bedroom && bedroom.beds.length > 1) {
+      bedroom.beds.splice(bedIndex, 1);
+      setBedrooms([...bedrooms]);
+    }
+  };
   const updateBed = (
     bedroomIndex: number,
     bedIndex: number,
@@ -107,32 +134,43 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
                 <option value="master">Master</option>
                 <option value="guest">Guest</option>
               </Form.Select>
+              {bedrooms.length > 1 && ( // Check if there is more than one bedroom before rendering the delete button.
+                <Button danger onClick={() => removeBedroom(bedroomIndex)}>
+                  Remove Bedroom
+                </Button>
+              )}
               {bedroom.beds.map((bed, bedIndex) => (
-                <div key={bedIndex}>
-                  <input
+                <div key={bedIndex} className={'inputBedCount'}>
+                  <Input
                     type="number"
                     value={bed.count}
                     onChange={(e) => updateBed(bedroomIndex, bedIndex, Number(e.target.value), bed.size)}
-                  /><Form.Select
+                  />
+                  <Form.Select
                   onChange={(e) => {
                     if (['queen', 'king', 'double', 'single'].includes(e.target.value)) {
                       updateBed(bedroomIndex, bedIndex, bed.count, e.target.value as 'queen' | 'king' | 'double' | 'single');
                     }
                   }}
                   value={bed.size}
-                >
-                  <option value="queen">Queen</option>
-                  <option value="king">King</option>
-                  <option value="double">Double</option>
-                  <option value="single">Single</option>
-                </Form.Select>
+                  >
+                    <option value="queen">Queen</option>
+                    <option value="king">King</option>
+                    <option value="double">Double</option>
+                    <option value="single">Single</option>
+                  </Form.Select>
+                  {bedroom.beds.length > 1 && ( // Check if there is more than one bed before rendering the delete button.
+                    <Button danger onClick={() => removeBed(bedroomIndex, bedIndex)}>
+                      Remove Bed
+                    </Button>
+                  )}
                 </div>
               ))}
-              <Button onClick={() => addBed(bedroomIndex)}>Add Bed</Button>
+              <Button id={'addBedBtn'} type="primary" ghost onClick={() => addBed(bedroomIndex)}>Add Bed</Button>
               <br></br>
             </div>
           ))}
-          <Button onClick={addBedroom}>Add Bedroom</Button>
+          <Button type="primary" ghost onClick={addBedroom}>Add Bedroom</Button>
         </div>
         <a>Amenities</a>
         {
@@ -148,11 +186,11 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
         }
       </div>
       <div>
-        <Button variant="primary" onClick={onBack}>
+        <Button type="primary" ghost onClick={onBack}>
           Back
         </Button>
-        <button type="submit" id="createHosting" className="btn btn-primary" onClick={createHostingRequest}>Create
-        </button>
+        <Button type="primary" id="createHosting" disabled={!isFormValid} onClick={createHostingRequest}>Confirm
+        </Button>
       </div>
     </Form>
   );

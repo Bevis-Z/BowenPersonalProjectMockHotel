@@ -17,7 +17,7 @@ function Hosting () {
   return (
     <div className={'hosting'}>
       <header>
-        <h1>Hosting</h1>
+        <h1>Hostings</h1>
         <Button variant="btn btn-outline-primary" onClick={handleShow}>
           Airbnb Setup
         </Button>

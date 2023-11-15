@@ -31,7 +31,7 @@ const fetchListings = async ({ setIsLoading, setListings }: FetchListingsProps) 
     if (data.error) {
       throw new Error(data.error);
     } else {
-      console.log('Initial data:', data); // 日志输出：初始数据
+      console.log('Initial data:', data);
       const listingsWithDetails: Listing[] = await Promise.all(
         data.listings.map(async (listing): Promise<Listing> => {
           try {
@@ -41,7 +41,7 @@ const fetchListings = async ({ setIsLoading, setListings }: FetchListingsProps) 
               throw new Error(detailsJson.error);
             } else {
               const detailsData = detailsJson.listing as ListingDetails;
-              console.log('Details data:', detailsData); // 日志输出：详细数据
+              console.log('Details data:', detailsData);
               return {
                 ...listing,
                 ...detailsData,

@@ -33,6 +33,7 @@
 .addressDisplay {
     padding-left: 2em;
     padding-right: 2em;
+    padding-top: 2em;
 }
 
 .roomDetail {
@@ -57,6 +58,7 @@
     display: flex;
     flex-direction: column;
     gap: 1em;
+    margin-top: 7em;
 }
 
 .bookingCard {
@@ -93,6 +95,221 @@
     align-items: flex-start;
 }
 
+.reviewCard .ant-card-body button {
+    width: 100%;
+}
+
 .reviewCard:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4); /* Darker shadow on hover */
+}
+
+.addressDisplay {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.bookingReviewBox {
+    display: flex;
+    flex-direction: row;
+}
+
+@media (max-width: 1350px) {
+    .listDetail {
+        width: 100%;
+    }
+
+    .listDetail .carousel-container {
+        width: 40em;
+        height: auto;
+    }
+
+    .listDetail .imageContent {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #listImage {
+        padding-left: 20em;
+    }
+
+    .bookingReviewBox {
+        display: flex;
+        flex-direction: row;
+        margin-top: 3em;
+        padding-left: 6em;
+    }
+
+}
+
+@media (max-width: 1150px) and (min-width: 751px) {
+    .listDetail {
+        width: 100%;
+    }
+
+    .listDetail .carousel-container {
+        width: 35em;
+        height: auto;
+    }
+
+
+    .listDetail .imageContent {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bookingCard {
+        margin-left: 0;
+    }
+
+    #listImage {
+        padding-left: 10em;
+    }
+
+    .bookingReviewBox {
+        display: flex;
+        flex-direction: row;
+        margin-top: 3em;
+        padding-left: 2em;
+    }
+}
+
+@media (max-width: 900px) and (min-width: 501px) {
+    .listDetail {
+        width: 100%;
+        padding: 1em 2em;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .listDetail h1 {
+        font-size: 1.5em;
+        padding-left: 2em;
+    }
+
+    .listDetail .carousel-container {
+        width: 28em;
+        height: auto;
+        padding: 0 2em;
+    }
+
+    #listImage {
+        padding-left: 13em;
+    }
+
+    .imageContent {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bookingReviewBox {
+        display: flex;
+        flex-direction: row;
+        padding-left: 0;
+    }
+}
+@media (max-width: 700px) and (max-height: 799px) {
+    .listDetail {
+        width: 100%;
+        padding: 1em 2em;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .listDetail h1 {
+        font-size: 1.5em;
+    }
+
+    .listDetail .carousel-container {
+        width: 25em;
+        height: auto;
+    }
+
+    .imageContent {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bookingReviewBox {
+        display: flex;
+        flex-direction: column;
+        padding-left: 10em;
+    }
+
+    .bookingCard {
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px 0px;
+        transition: all 0.3s ease 0s;
+        padding: 15px;
+        margin-bottom: 20px;
+        margin-left: 0;
+        border-radius: 5px;
+        width: 25em;
+        background-color: rgb(255, 255, 255);
+    }
+
+    .reviewCard {
+        margin-left: 0;
+    }
+
+    .amenity span {
+        display: none;
+    }
+
+}
+
+@media (max-width: 628px) and (max-height: 799px) {
+    #listImage {
+        padding-left: 7em;
+    }
+
+    .bookingReviewBox {
+        display: flex;
+        flex-direction: column;
+        padding-left: 6em;
+    }
+
+
+}
+
+@media (max-width: 500px) and (max-height: 799px) {
+    #listImage {
+        padding-left: 3em;
+    }
+
+    .bookingReviewBox {
+        display: flex;
+        flex-direction: column;
+        padding-left: 2em;
+    }
+
+
+}
+
+@media (max-width: 463px) and (max-height: 799px) {
+    .hosting {
+        padding: 1.5em 1em;
+    }
+
+    .hosting header {
+        padding-left: 1em;
+    }
+    #listImage {
+        padding-left: 3em;
+    }
+
+    .listDetail .carousel-container {
+        width: 14em;
+        height: auto;
+    }
+    .hosting .ant-list-item-extra {
+        margin-left: 1em!important;
+    }
+
+    .bookingReviewBox {
+        display: flex;
+        flex-direction: column;
+        padding-left: 0em;
+    }
+
+
 }

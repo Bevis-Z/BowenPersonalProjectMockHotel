@@ -88,10 +88,9 @@ function PublicHostingList ({ searchFilters }: PublicHostingListProps) {
   useEffect(() => {
     // 筛选逻辑
     const filteredListings = listings.filter(listing => {
-      const searchTextLower = searchFilters.searchText.toLowerCase(); // 转为小写
+      const searchTextLower = searchFilters.searchText.toLowerCase();
       const withinBedroomRange = (searchFilters.minBedrooms == null || listing.totalBeds >= searchFilters.minBedrooms) &&
         (searchFilters.maxBedrooms == null || listing.totalBeds <= searchFilters.maxBedrooms);
-      // 检查日期范围是否满足条件
       let withinDateRange = true;
       if (searchFilters.startDate && searchFilters.endDate) {
         const startDay = searchFilters.startDate ? dayjs(searchFilters.startDate) : null;

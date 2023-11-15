@@ -65,6 +65,8 @@ const ListingDetail: React.FC = () => {
         throw new Error('Failed to submit review');
       }
       message.success('Review submitted successfully!');
+
+      // Fetch the updated listing details to get the new reviews
     } catch (error) {
       message.error('Failed to submit review.');
     }
@@ -153,43 +155,46 @@ const ListingDetail: React.FC = () => {
       return () => clearInterval(interval);
     }, [listing.id]);
   }
+
   return (
     <div className={'listDetail'}>
       <h1>{listing.title} ({listing.metadata.propertyType})</h1>
       <div className={'imageContent'}>
         <HostingListImage thumbnails={listing.thumbnail} />
-        <Card className={'bookingCard'}>
-          <div className={'booking'}>
-            <h3>{listing.address}</h3>
-            <h6>{priceDisplay}</h6>
-            <div className={'scoreBeds'}>
-              <IconText icon={StarOutlined} text={`${listing.averageRating?.toFixed(1) || 'N/A'} (${listing.reviews.length} reviews)`} />
-              <div className={'roomDetail'}>
-                <p><MdBedroomParent/>{listing.metadata.bedrooms.length}</p>
-                <p><BiSolidBed/>{listing.totalBeds}</p>
-                <p><BiSolidBath/>{listing.metadata.bathroomNumber}</p>
+        <div className={'bookingReviewBox'}>
+          <Card className={'bookingCard'}>
+            <div className={'booking'}>
+              <h3>{listing.address}</h3>
+              <h6>{priceDisplay}</h6>
+              <div className={'scoreBeds'}>
+                <IconText icon={StarOutlined} text={`${listing.averageRating?.toFixed(1) || 'N/A'} (${listing.reviews.length} reviews)`} />
+                <div className={'roomDetail'}>
+                  <p><MdBedroomParent/>{listing.metadata.bedrooms.length}</p>
+                  <p><BiSolidBed/>{listing.totalBeds}</p>
+                  <p><BiSolidBath/>{listing.metadata.bathroomNumber}</p>
+                </div>
+              </div>
+              <div className={'confirmBooking'}>
+                <RangePicker
+                  format="YYYY-MM-DD"
+                  onChange={handleBookingDatesChange}
+                  value={bookingDates as [dayjs.Dayjs | null, dayjs.Dayjs | null]} // Ensure the value type aligns with what RangePicker expects
+                  disabledDate={disabledDate} // Use the disabledDate function
+                />
+                <Button
+                  type="primary"
+                  onClick={handleBookingConfirm}
+                  disabled={!bookingDates || !bookingDates[0] || !bookingDates[1]}
+                >
+                  Confirm Booking
+                </Button>
               </div>
             </div>
-            <div className={'confirmBooking'}>
-              <RangePicker
-                format="YYYY-MM-DD"
-                onChange={handleBookingDatesChange}
-                value={bookingDates as [dayjs.Dayjs | null, dayjs.Dayjs | null]} // Ensure the value type aligns with what RangePicker expects
-                disabledDate={disabledDate} // Use the disabledDate function
-              />
-              <Button
-                type="primary"
-                onClick={handleBookingConfirm}
-                disabled={!bookingDates || !bookingDates[0] || !bookingDates[1]}
-              >
-                Confirm Booking
-              </Button>
-            </div>
-          </div>
-        </Card>
-        {userHasBooking && userBookingId && (
-          <ReviewForm userBookingId={userBookingId} onReviewSubmit={handleReviewSubmit} />
-        )}
+          </Card>
+          {userHasBooking && userBookingId && (
+            <ReviewForm userBookingId={userBookingId} onReviewSubmit={handleReviewSubmit} />
+          )}
+        </div>
       </div>
       <div className={'addressDisplay'}>
         <h3>What this place offers</h3>
@@ -205,7 +210,7 @@ const ListingDetail: React.FC = () => {
 
 export default ListingDetail;
 
-// 辅助函数：计算总住宿价格
+// Used to calculate the price for a stay
 function calculatePriceForStay (pricePerNight: number, startDate: Date, endDate: Date) {
   const days = dayjs(endDate).diff(dayjs(startDate), 'day');
   return pricePerNight * days;

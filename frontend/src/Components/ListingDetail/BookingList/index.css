@@ -1,7 +1,7 @@
 /* BookingList.css */
 
 .booking-list-container {
-    margin-top: 20px; /* Adjust the top margin as needed */
+    padding-top: 2em;
     padding-left: 2em;
     padding-right: 2em;
 }

@@ -1,7 +1,7 @@
 .publicListing {
     display: flex;
     flex-wrap: wrap;
-    gap: 4em; /* 调整卡片之间的间距 */
+    gap: 4em;
 }
 .publicHost {
     display: flex;
@@ -14,4 +14,71 @@
 .slick-list img{
     width: 100%;
     object-fit: cover;
+}
+
+@media (max-width: 1000px) {
+    .publicListing {
+        gap: 1em;
+    }
+}
+
+@media (max-width: 880px) {
+    .publicListing {
+        gap: 3em;
+        padding-left: 5em;
+    }
+}
+
+@media (max-width: 700px) {
+    .publicListing {
+        gap: 1em;
+        padding-left: 0.5em;
+    }
+
+    .slick-slide .slick-active .slick-current {
+        width: 30em;
+    }
+}
+
+@media (max-width: 798px) {
+    .publicListing {
+        gap: 1em;
+        padding-left: 3em;
+    }
+    .publicListing .ant-card {
+        border: none;
+    }
+
+    .slick-slide .slick-active .slick-current {
+        width: 30em;
+    }
+}
+
+@media (max-width: 700px) {
+    .publicListing {
+        gap: 1em;
+        padding-left: 1.5em;
+    }
+    .publicHost {
+        width: 17em;
+    }
+}
+
+
+@media (max-width: 650px) {
+    .publicListing {
+        gap: 1em;
+        padding-left: 7em;
+    }
+
+}
+
+
+
+@media (max-width: 450px) {
+    .publicListing {
+        gap: 1em;
+        padding-left: 2em;
+    }
+
 }

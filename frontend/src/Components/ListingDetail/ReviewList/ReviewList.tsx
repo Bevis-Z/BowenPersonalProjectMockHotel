@@ -23,8 +23,8 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
         dataSource={reviews.slice(0, visibleReviews)}
         renderItem={(review, index) => (
           <List.Item key={index}>
-            <p>Rating: {review.star}/5</p>
-            <p>Comment: {review.comment}</p>
+            <p><b>Comment:</b> {review.comment}</p>
+            <p><b>Rating:</b> {review.star}/5</p>
           </List.Item>
         )}
       />

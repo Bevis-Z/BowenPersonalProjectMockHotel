@@ -7,12 +7,9 @@ import RegisterModal from './Components/User/RegisterModal';
 import Navbar from './Components/Navbar/Navbar';
 import { AuthProvider } from './AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// eslint-disable-next-line import/extensions
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ListingDetail from './Components/ListingDetail/ListingDetail';
 import BookingDetails from './Components/BookingDetails/BookingDetails';
 
-// 在 PublicHostingList 组件中
 export interface SearchFilters {
   searchText: string;
   minBedrooms: number | null;

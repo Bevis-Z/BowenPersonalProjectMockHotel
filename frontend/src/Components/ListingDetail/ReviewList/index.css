@@ -1,4 +1,13 @@
 .reviews {
     padding-left: 2em;
     padding-right: 2em;
+    padding-top: 2em;
+}
+
+
+.reviews hr {
+    border: 0;
+    height: 1px;
+    background-color: #ccc; /* Line color */
+    margin-bottom: 20px; /* Space between line and list */
 }

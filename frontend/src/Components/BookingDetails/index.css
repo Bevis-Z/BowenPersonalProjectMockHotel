@@ -39,3 +39,110 @@
 .bookingHistory {
     padding: 2em 0;
 }
+.actionPriceBox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: rgba(0, 0, 0, 0.88);
+}
+
+.actionBox {
+    display: flex;
+    margin-top: 1em;
+    gap: 0.5em;
+}
+
+.ant-list-items .ant-list-item-action {
+    margin-inline-start: 0!important;
+}
+
+@media (max-width: 1160px) {
+    .chartsDisplay {
+        padding: 1em 1em;
+    }
+
+    .liquid-chart-container {
+        width: 18em;
+        height: 18em;
+    }
+}
+
+
+@media (max-width: 1000px) {
+    .liquid-chart-container {
+        width: 14em;
+        height: 14em;
+    }
+}
+
+@media (max-width: 880px) {
+    .liquid-chart-container {
+        width: 10em;
+        height: 10em;
+    }
+
+    .bookingDetails {
+        padding: 2em 4em;
+    }
+    .bookingDetails h3 {
+        font-size: 1.5em;
+    }
+    .bookingDetails h5 {
+        font-size: 1em;
+    }
+    .actionBox {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+    }
+}
+@media (max-width: 720px) {
+    .liquid-chart-container {
+        width: 5em;
+        height: 5em;
+    }
+    .liquid-chart-container .g2-html-annotation {
+        font-size: 1em!important;
+    }
+}
+
+@media (max-width: 651px) {
+    .liquid-chart-container {
+        width: 5em;
+        height: 5em;
+    }
+    .ant-list-item {
+        display: flex;
+        flex-direction: row;
+    }
+
+}
+
+@media (max-width: 600px) {
+    .yearDisplay {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .liquid-chart-container {
+        width: 5em;
+        height: 5em;
+        display: flex;
+        flex-direction: column;
+    }
+    .ant-list-item {
+        display: flex;
+        flex-direction: row;
+    }
+
+}
+
+
+@media (max-width: 450px) {
+    .ant-list-item {
+        display: flex;
+        flex-direction: row;
+        gap:0.5em;
+    }
+
+}

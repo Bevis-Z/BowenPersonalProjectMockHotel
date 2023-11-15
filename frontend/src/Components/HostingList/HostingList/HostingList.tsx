@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import StarOutlined from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { List, Space, Button, message } from 'antd';
+import { List, Space, Button, message, Empty } from 'antd';
 import HostingListImage from '../HostingListImage/HostingListImage';
 import { BiSolidBath, BiSolidBed } from 'react-icons/bi';
 import './index.css';
@@ -23,13 +23,14 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentEditingHost, setCurrentEditingHost] = useState<Listing | null>(null);
   const currentUserEmail = localStorage.getItem('currentUserEmail');
+  const currentUserListings = listings.filter((item) => item.owner === currentUserEmail);
 
   const navigate = useNavigate();
 
   const handleTitleClick = (hostData: Listing) => {
     setCurrentEditingHost(hostData);
     setShowEditModal(true);
-    navigate(`/edit-hosting/${hostData.id}`); // 更新路由
+    navigate(`/edit-hosting/${hostData.id}`);
   };
 
   const handleCloseEditModal = () => {
@@ -87,6 +88,13 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
     }
   };
 
+  const listLocale = {
+    emptyText: (
+      <div className="custom-empty-data">
+        <Empty />
+      </div>
+    ),
+  };
   const handleModalOk = (selectedDates: string[]) => {
     if (!currentListingId || !selectedDates) return;
     setPublishModalVisible(false);
@@ -104,10 +112,14 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
             <List
               itemLayout="vertical"
               size="large"
-              pagination={{
-                pageSize: 3,
-              }}
-              dataSource={listings}
+              pagination={
+                currentUserListings.length > 0
+                  ? {
+                      pageSize: 3,
+                    }
+                  : false
+              }
+              dataSource={currentUserListings}
               renderItem={(item: Listing) => {
                 if (item.owner !== currentUserEmail) {
                   return null;
@@ -136,14 +148,15 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                     />
                     <Button danger onClick={() => handleDelete(item.id)}>Delete</Button> {/* 删除按钮 */}
                     {item.published
-                      ? <Button onClick={() => handleUnpublish(item.id)}>Unpublish</Button>
-                      : <Button onClick={() => handlePublish(item.id)}>Publish</Button>
+                      ? <Button className={'publishBtn'} onClick={() => handleUnpublish(item.id)}>Unpublish</Button>
+                      : <Button className={'publishBtn'} onClick={() => handlePublish(item.id)}>Publish</Button>
                     }
                     <Button
                       type="primary"
                       onClick={() => navigate(`/bookings/${item.id}`, { state: { listing: item } })}
+                      id="viewBooking"
                     >
-                      View Bookings
+                      View History
                     </Button>
                   </List.Item>
                   <PublishModal
@@ -155,6 +168,7 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                 </>
                 );
               }}
+              locale={listLocale}
             />
           )}
       {showEditModal && currentEditingHost && (

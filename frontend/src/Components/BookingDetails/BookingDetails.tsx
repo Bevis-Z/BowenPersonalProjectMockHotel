@@ -1,4 +1,3 @@
-// BookingDetails.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { message, List, Button, Card } from 'antd';
@@ -16,7 +15,7 @@ const BookingDetails: React.FC = () => {
   const [daysBooked, setDaysBooked] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
   const [maxPrice, setMaxPrice] = useState(0);
-  const maxDaysBooked = 365; // 一年的最大天数
+  const maxDaysBooked = 365;
 
   const fetchBookings = async () => {
     try {
@@ -38,16 +37,16 @@ const BookingDetails: React.FC = () => {
 
       let totalDays = 0;
       let profit = 0;
-      const currentYear = new Date().getFullYear(); // 获取当前年份
+      const currentYear = new Date().getFullYear(); // Get the current year
 
       bookingsForListing.forEach((booking: Booking) => {
         const start = new Date(booking.dateRange[0]);
         const end = new Date(booking.dateRange[1]);
 
-        // 检查预订是否在当前年份内
+        // Check if the booking is for the current year and has been accepted
         if (start.getFullYear() === currentYear && booking.status === 'accepted') {
           const days = (end.getTime() - start.getTime()) / (1000 * 3600 * 24);
-          totalDays += Math.ceil(days); // 向上取整以确保至少计算一天
+          totalDays += Math.ceil(days);
           profit += booking.totalPrice;
         }
       });
@@ -82,7 +81,7 @@ const BookingDetails: React.FC = () => {
     if (listingId) {
       fetchBookings();
     }
-  }, [listingId]); // 确保 listingId 是依赖项
+  }, [listingId]);
 
   const handleAcceptBooking = async (bookingId: number) => {
     try {
@@ -107,7 +106,7 @@ const BookingDetails: React.FC = () => {
 
   const handleRejectBooking = async (bookingId: number) => {
     try {
-      // 调用拒绝预订的API
+      // Request to reject booking
       const response = await fetch(`http://localhost:5005/bookings/reject/${bookingId}`, {
         method: 'PUT',
         headers: {
@@ -118,7 +117,7 @@ const BookingDetails: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to reject booking');
       }
-      // 更新状态
+      // Update the state
       fetchBookings();
       message.success('Booking rejected successfully');
     } catch (error) {
@@ -152,22 +151,31 @@ const BookingDetails: React.FC = () => {
             <List.Item
               actions={[
                 booking.status === 'pending' && (
-                  <>
-                    <Button onClick={() => handleAcceptBooking(booking.id)} type="primary">
-                      Accept
-                    </Button>
-                    <Button onClick={() => handleRejectBooking(booking.id)} danger>
-                      Reject
-                    </Button>
-                  </>
+                  <div className={'actionPriceBox'}>
+                    <div>Amount: ${booking.totalPrice}</div>
+                    <div className={'actionBox'}>
+                      <Button onClick={() => handleAcceptBooking(booking.id)} type="primary">
+                        Accept
+                      </Button>
+                      <Button onClick={() => handleRejectBooking(booking.id)} danger>
+                        Reject
+                      </Button>
+                    </div>
+                  </div>
                 ),
               ]}
             >
               <List.Item.Meta
-                title={`Booking ID: ${booking.id}`}
-                description={`Date Range: ${formatDateRange(booking.dateRange)} - Status: ${booking.status}`}
+                title={`ID: ${booking.id}`}
+                description={
+                  <div>
+                    {formatDateRange(booking.dateRange)}
+                    <br />
+                    Status: {booking.status}
+                  </div>
+                }
               />
-              <div>Total Price: ${booking.totalPrice}</div>
+              {booking.status !== 'pending' && (<div>Amount: ${booking.totalPrice}</div>)}
             </List.Item>
           )}
         />

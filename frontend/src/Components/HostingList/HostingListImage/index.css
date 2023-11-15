@@ -29,3 +29,22 @@
 .ant-carousel .slick-dots li button {
     background: #364d79;
 }
+
+@media (max-width: 601px) {
+    .carousel-container {
+        width: 12em;
+        overflow: hidden;
+    }
+
+    .carousel-content {
+        height: 12em;
+        text-align: center;
+    }
+
+    .ant-list-item-main .ant-space-item {
+        display: flex;
+        flex-wrap: nowrap;
+        padding: 0;
+        font-size: 0.8em;
+    }
+}
