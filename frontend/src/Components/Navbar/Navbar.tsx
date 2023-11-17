@@ -16,6 +16,7 @@ type NavbarProps = {
   onSearch: (filters: SearchFilters) => void;
 };
 
+// This is the Navbar component that will be rendered in the App component
 function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
   const [searchText, setSearchText] = useState('');
   const [minBedrooms, setMinBedrooms] = useState<number | null>(null);
@@ -69,7 +70,7 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
       maxRating,
     };
     onSearch(filters);
-    setIsDropdownVisible(false); // 隐藏下拉菜单
+    setIsDropdownVisible(false);
   };
   const navigate = useNavigate();
   const userLogout = async () => {
@@ -120,7 +121,7 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
       <div className="container-fluid">
         <Link className="navbar-brand" to="/" onClick={handleReset}>
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/1200px-Airbnb_Logo_B%C3%A9lo.svg.png"
-            alt="" width="auto" height="36" className="d-inline-block align-text-top" />
+            alt="logo" width="auto" height="36" className="d-inline-block align-text-top" />
         </Link>
         {isRootPath && (
           <div className={'search-dropdown dropup'}>

@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import CreateHosting from '../../Components/CreateHosting/CreateHosting';
 import HostingList from '../../Components/HostingList/HostingList/HostingList';
 
+// This component is used for user to manage their listings
 function Hosting () {
   const [show, setShow] = useState(false);
   const [refreshList, setRefreshList] = useState(false);
@@ -18,7 +19,7 @@ function Hosting () {
     <div className={'hosting'}>
       <header>
         <h1>Hostings</h1>
-        <Button variant="btn btn-outline-primary" onClick={handleShow}>
+        <Button id={'createHost'} variant="btn btn-outline-primary" onClick={handleShow}>
           Airbnb Setup
         </Button>
       </header>

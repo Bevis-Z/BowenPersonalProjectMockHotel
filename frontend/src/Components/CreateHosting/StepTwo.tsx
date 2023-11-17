@@ -35,19 +35,21 @@ interface StepTwoProps {
 const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, setBathroomNumber, setBedrooms, setAmenities, onBack, createHostingRequest }) => {
   const [isFormValid, setIsFormValid] = useState(false);
 
-  // 当表单数据发生变化时，检查表单是否填写完整
+  // When form data changes, check if the form is valid
   useEffect(() => {
-    // 在这里编写检查逻辑
+    // Check if data is valid
     const isBathroomNumberValid = bathroomNumber.trim() !== '';
     const areBedroomsValid = bedrooms.every(bedroom => bedroom.type !== '' && bedroom.beds.every(bed => bed.count > 0));
     const areAmenitiesValid = Object.values(amenities).some(value => value === true);
 
-    // 设置状态变量以反映表单是否填写完整
+    // Change the state of isFormValid
     setIsFormValid(isBathroomNumberValid && areBedroomsValid && areAmenitiesValid);
   }, [bathroomNumber, bedrooms, amenities]);
+  // Add a bedroom to the list of bedrooms
   const addBedroom = (): void => {
     setBedrooms([...bedrooms, { type: '', beds: [{ count: 1, size: 'queen' }] }]);
   };
+  // Update the bedroom type
   const updateBedroom = (index: number, newType: string): void => {
     const newBedrooms = bedrooms.map((bedroom, idx) => {
       if (idx === index) {
@@ -61,6 +63,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
 
     setBedrooms(newBedrooms);
   };
+  // Add a bed to the bedroom
   const addBed = (bedroomIndex: number): void => {
     const newBedrooms = bedrooms.map(bedroom => ({
       ...bedroom,
@@ -70,13 +73,13 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
     newBedrooms[bedroomIndex]?.beds.push({ count: 1, size: 'queen' });
     setBedrooms(newBedrooms);
   };
-
+  // Remove a bedroom from the list of bedrooms
   const removeBedroom = (bedroomIndex: number): void => {
     const newBedrooms = [...bedrooms];
     newBedrooms.splice(bedroomIndex, 1);
     setBedrooms(newBedrooms);
   };
-
+  // Remove a bed from the bedroom
   const removeBed = (bedroomIndex: number, bedIndex: number): void => {
     const bedroom = bedrooms[bedroomIndex];
     if (bedroom && bedroom.beds.length > 1) {
@@ -129,7 +132,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
         <div>
           {bedrooms.map((bedroom, bedroomIndex) => (
             <div key={bedroomIndex}>
-              <Form.Select onChange={(e) => updateBedroom(bedroomIndex, e.target.value)} value={bedroom.type}>
+              <Form.Select id={'bedRoomSelect'} onChange={(e) => updateBedroom(bedroomIndex, e.target.value)} value={bedroom.type}>
                 <option value="">Select bedroom type</option>
                 <option value="master">Master</option>
                 <option value="guest">Guest</option>
@@ -170,7 +173,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
               <br></br>
             </div>
           ))}
-          <Button type="primary" ghost onClick={addBedroom}>Add Bedroom</Button>
+          <Button type="primary" id={'addBedroom'} ghost onClick={addBedroom}>Add Bedroom</Button>
         </div>
         <a>Amenities</a>
         {

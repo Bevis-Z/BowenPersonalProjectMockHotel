@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import LiquidChart from './LiquidChart';
 import './index.css';
 
+// This component is used to display the booking details for a listing
 const BookingDetails: React.FC = () => {
   const { listingId } = useParams();
   const location = useLocation();
@@ -16,7 +17,7 @@ const BookingDetails: React.FC = () => {
   const [totalProfit, setTotalProfit] = useState(0);
   const [maxPrice, setMaxPrice] = useState(0);
   const maxDaysBooked = 365;
-
+  // Fetch bookings for the listing to check the bookings for the current login user
   const fetchBookings = async () => {
     try {
       const response = await fetch('http://localhost:5005/bookings/', {
@@ -53,10 +54,11 @@ const BookingDetails: React.FC = () => {
       setDaysBooked(totalDays);
       setTotalProfit(profit);
     } catch (error) {
-      message.error('Error fetching bookings');
+      console.log('Error fetching bookings');
     }
   };
 
+  // Fetch the listing details
   useEffect(() => {
     const calculatePostedDays = () => {
       if (listing && listing.postedOn) {
@@ -82,10 +84,10 @@ const BookingDetails: React.FC = () => {
       fetchBookings();
     }
   }, [listingId]);
-
+  // Handler to accept booking
   const handleAcceptBooking = async (bookingId: number) => {
     try {
-      // 调用接受预订的API
+      // Get the booking details
       const response = await fetch(`http://localhost:5005/bookings/accept/${bookingId}`, {
         method: 'PUT',
         headers: {
@@ -96,14 +98,14 @@ const BookingDetails: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to accept booking');
       }
-      // 更新状态
+      // Refresh the state
       fetchBookings();
       message.success('Booking accepted successfully');
     } catch (error) {
       message.error('Error accepting booking');
     }
   };
-
+  // Handler to reject booking
   const handleRejectBooking = async (bookingId: number) => {
     try {
       // Request to reject booking

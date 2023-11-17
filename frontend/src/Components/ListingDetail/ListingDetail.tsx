@@ -17,6 +17,9 @@ import { MdBedroomParent } from 'react-icons/md';
 import { renderAmenities } from './RenderAmenities/RenderAmenities';
 
 const { RangePicker } = DatePicker;
+
+// This is the ListingDetail component that will be rendered in the App component
+// Contains the logic for booking a listing and submitting a review
 const ListingDetail: React.FC = () => {
   const [userHasBooking, setUserHasBooking] = useState<boolean>(false);
   const [userBookings, setUserBookings] = useState<Booking[]>([]); // Add a state to hold user bookings
@@ -29,10 +32,11 @@ const ListingDetail: React.FC = () => {
   const [userBookingId, setUserBookingId] = useState<number | null>(null);
 
   const navigate = useNavigate();
-
+  // Cannot book a listing in the past
   const disabledDate = (current: Dayjs): boolean => {
     return current && current < dayjs().startOf('day');
   };
+  // Set the booking dates if the search filters contain a start and end date
   useEffect(() => {
     if (searchFilters?.startDate && searchFilters?.endDate) {
       const start = dayjs(searchFilters.startDate);
@@ -42,9 +46,11 @@ const ListingDetail: React.FC = () => {
       }
     }
   }, [searchFilters]);
+  // Set the loading state to true when the component mounts
   if (!listing) {
     return <div>Loading...</div>;
   }
+  // Submit a review for a booking
   const handleReviewSubmit = async (bookingId: number, score: number, userComment: string) => {
     try {
       const reviewPayload = {
@@ -71,6 +77,7 @@ const ListingDetail: React.FC = () => {
       message.error('Failed to submit review.');
     }
   };
+  // Book a listing
   const handleBookingConfirm = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -108,6 +115,7 @@ const ListingDetail: React.FC = () => {
       message.error(errorMessage);
     }
   };
+  // Update the booking dates when the user selects a new date range
   const handleBookingDatesChange = (
     dates: RangeValue<Dayjs>,
   ) => {
@@ -117,7 +125,7 @@ const ListingDetail: React.FC = () => {
   const priceDisplay = searchFilters && searchFilters.startDate && searchFilters.endDate
     ? `Price for Stay: ${calculatePriceForStay(listing.price, searchFilters.startDate, searchFilters.endDate)}`
     : `Price per Night: ${listing.price}`;
-
+  // Get the user's bookings for this listing
   const fetchBookings = async () => {
     try {
       const response = await fetch('http://localhost:5005/bookings/', {
@@ -133,7 +141,7 @@ const ListingDetail: React.FC = () => {
       }
       const bookingData = await response.json();
       const userBooking = bookingData.bookings.find((booking: Booking) =>
-        booking.owner === currentUserEmail && booking.listingId.toString() === listing.id.toString() && booking.status === 'accepted'
+        booking.owner === currentUserEmail && booking.listingId.toString() === listing.id.toString() && (booking.status === 'accepted' || 'pending')
       );
       setUserHasBooking(!!userBooking);
       setUserBookingId(userBooking ? userBooking.id : null);

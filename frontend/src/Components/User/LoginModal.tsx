@@ -11,6 +11,7 @@ type LoginModalProps = {
   onHide: () => void; // Assuming no parameters are passed to this function
 }
 
+// This is the LoginModal component that will be rendered in the App component
 function LoginModal ({ show, onHide }: LoginModalProps) {
   const [userEmail, setUserEmail] = React.useState('');
   const [userPassword, setUserPassword] = React.useState('');

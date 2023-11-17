@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { Menu, DatePicker, Card } from 'antd';
+import React, { useCallback } from 'react';
+import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import FocusLock from 'react-focus-lock';
 import './index.css';
@@ -27,6 +27,7 @@ interface SearchDropdownMenuProps {
   handleReset: () => void;
 }
 
+// This is the SearchDropdownMenu component that will be rendered in the Navbar component
 const SearchDropdownMenu: React.FC<SearchDropdownMenuProps> = ({
   searchText,
   setSearchText,
@@ -60,7 +61,6 @@ const SearchDropdownMenu: React.FC<SearchDropdownMenuProps> = ({
             placeholder="Where"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            // onClick={(e) => e.stopPropagation()}
           />
           {/* Bedroom Inputs */}
           <div className={'bedSearch'}>
@@ -70,7 +70,6 @@ const SearchDropdownMenu: React.FC<SearchDropdownMenuProps> = ({
               placeholder="Min Bedrooms"
               value={minBedrooms || ''}
               onChange={(e) => handleBedroomsChange(e, setMinBedrooms)}
-              // onClick={(e) => e.stopPropagation()}
             />
             <input
               className="form-control me-2"
@@ -81,14 +80,12 @@ const SearchDropdownMenu: React.FC<SearchDropdownMenuProps> = ({
               onClick={(e) => e.stopPropagation()}
             />
           </div>
-          {/* Date Range Picker */}
           <div className={'priceSearch'}>
             <input className="form-control me-2" type="number" placeholder="Min Price" value={minPrice || ''} onClick={(e) => e.stopPropagation()}
                     onChange={(e) => setMinPrice(e.target.value ? parseInt(e.target.value, 10) : null)} />
             <input className="form-control me-2" type="number" placeholder="Max Price" value={maxPrice || ''} onClick={(e) => e.stopPropagation()}
                     onChange={(e) => setMaxPrice(e.target.value ? parseInt(e.target.value, 10) : null)} />
           </div>
-          {/* 评分范围输入框 */}
           <div className={'ratingSearch'}>
             <input className="form-control me-2" type="number" placeholder="Min Rating" value={minRating || ''} onClick={(e) => e.stopPropagation()} onChange={(e) => setMinRating(e.target.value ? parseInt(e.target.value, 10) : null)} />
             <input className="form-control me-2" type="number" placeholder="Max Rating" value={maxRating || ''} onClick={(e) => e.stopPropagation()}

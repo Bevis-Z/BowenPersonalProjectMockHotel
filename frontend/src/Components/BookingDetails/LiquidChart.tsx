@@ -3,10 +3,11 @@ import { Liquid } from '@antv/g2plot';
 import './index.css';
 
 interface LiquidChartProps {
-  value: number; // 显示的数值
-  max: number; // 最大值，用于计算百分比
+  value: number; // Show the actual value
+  max: number; // Maximum value
 }
 
+// LiquidChart component to display the liquid chart about the booking details
 const LiquidChart: React.FC<LiquidChartProps> = ({ value, max }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -16,11 +17,11 @@ const LiquidChart: React.FC<LiquidChartProps> = ({ value, max }) => {
     }
 
     const liquidPlot = new Liquid(containerRef.current, {
-      percent: value / max, // 计算百分比
+      percent: value / max, // Calculate the percentage
       statistic: {
         title: false,
         content: {
-          formatter: () => `${value}`, // 直接显示数值
+          formatter: () => `${value}`, // Show the actual value
         },
       },
       outline: {

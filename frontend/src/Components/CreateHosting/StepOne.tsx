@@ -18,6 +18,7 @@ interface StepOneProps {
   onFileListChange: (files: UploadFile[]) => void;
 }
 
+// This is the StepOne component that will be rendered in the CreateHosting component
 const StepOne: React.FC<StepOneProps> = ({ images, title, address, price, setTitle, propertyType, setPropertyType, setAddress, setPrice, onNext, onFileListChange }) => {
   const uploadButton = (
     <div>
@@ -50,7 +51,7 @@ const StepOne: React.FC<StepOneProps> = ({ images, title, address, price, setTit
           fileList={images}
           onChange={({ fileList }) => onFileListChange(fileList)}
           showUploadList={{
-            showPreviewIcon: false, // 隐藏预览图标
+            showPreviewIcon: false,
             showRemoveIcon: true
           }}
         >

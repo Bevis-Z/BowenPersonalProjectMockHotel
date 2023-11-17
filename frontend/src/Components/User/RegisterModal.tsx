@@ -9,6 +9,7 @@ type RegisterModalProps = {
   show: boolean;
   onHide: () => void; // Assuming no parameters are passed to this function
 }
+// This is the LoginModal component that will be rendered in the App component
 function RegisterModal ({ show, onHide }: RegisterModalProps) {
   const [userEmail, setUserEmail] = React.useState('');
   const [userName, setUserName] = React.useState('');
@@ -36,6 +37,7 @@ function RegisterModal ({ show, onHide }: RegisterModalProps) {
     } else {
       message.success('Register successfully');
       localStorage.setItem('token', data.token);
+      localStorage.setItem('currentUserEmail', userEmail);
       setIsLoggedIn(true);
       onHide();
     }
@@ -64,7 +66,7 @@ function RegisterModal ({ show, onHide }: RegisterModalProps) {
             <Form.Control type="password" className="form-control" id="checkUserPassword" onChange={(event) => setCheckUserPassword(event.target.value)} value={checkUserPassword} />
           </div>
           <div>
-            <button type="submit" className="btn btn-primary mb-3" onClick={defaultUserRegisterRequest}>Register</button>
+            <button type="submit" id={'registerBtn'} className="btn btn-primary mb-3" onClick={defaultUserRegisterRequest}>Register</button>
           </div>
           <Link to={'/login'}>Click to Login</Link>
         </Form>

@@ -40,8 +40,8 @@ interface Listing {
 export type createHostingProps = {
   show: boolean;
   onHide: () => void; // Assuming no parameters can pass to this function
-  editing?: boolean; // 新增：标识是否为编辑模式
-  initialData?: Listing; // 新增：编辑模式下的初始数据
+  editing?: boolean;
+  initialData?: Listing;
   onHostCreated: () => void;
 };
 function createHosting ({ show, onHide, editing = false, initialData, onHostCreated }: createHostingProps) {
@@ -107,6 +107,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       });
     }
   }, [editing, initialData]);
+  // Create a hosting request
   const createHostingRequest = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     const metaData = {
@@ -115,6 +116,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       bedrooms,
       amenities: Object.keys(amenities).filter((key): key is keyof Amenities => amenities[key as keyof Amenities]),
     };
+    // Check if the user is editing a listing or creating a new one
     if (editing && initialData) {
       const response = await fetch(`http://localhost:5005/listings/${initialData.id}`, {
         method: 'PUT',
@@ -130,10 +132,11 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       } else {
         message.success('Modify successfully');
         onHide();
-        onHostCreated && onHostCreated(); // 调用回调函数
+        onHostCreated && onHostCreated();
         setStep(1);
       }
     }
+    // If the user is creating a new listing
     if (!editing) {
       const response = await fetch('http://localhost:5005/listings/new', {
         method: 'POST',
@@ -154,6 +157,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       }
     }
   }
+  // Set form step
   const handleNextStep = () => {
     if (step === 1) {
       setStep(2);
@@ -166,6 +170,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       setStep(step - 1);
     }
   };
+  // Convert the image Base64 to UploadFile objects
   const toUploadFileList = (images: string[]): UploadFile<any>[] => {
     return images.map((image, index) => ({
       uid: index.toString(),
@@ -174,6 +179,7 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
       url: image,
     }));
   };
+  // When the user uploads a new image, convert the image to Base64 and store it in the state
   const handleUploadChange = (newFileList: UploadFile<any>[]) => {
     const newImagesPromises = newFileList.map(file => {
       return new Promise<string>((resolve, reject) => {
@@ -189,7 +195,6 @@ function createHosting ({ show, onHide, editing = false, initialData, onHostCrea
           reader.onerror = error => reject(error);
           reader.readAsDataURL(file.originFileObj);
         } else if (file.url) {
-          // 如果文件已经有 URL（例如，编辑现有列表时），直接使用它
           resolve(file.url);
         } else {
           reject(new Error('No file to read'));

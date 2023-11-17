@@ -11,6 +11,7 @@ const contentStyle: React.CSSProperties = {
   background: 'orange',
 };
 
+// The HostingListImage component will be rendered in the HostingList component
 const HostingListImage: React.FC<HostingListImageProps> = ({ thumbnails }) => {
   const onChange = (currentSlide: number) => {
     console.log(currentSlide);

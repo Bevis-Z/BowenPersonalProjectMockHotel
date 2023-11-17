@@ -8,6 +8,7 @@ interface ReviewListProps {
   reviews: Review[];
 }
 
+// This is the ReviewList component that will be rendered in the ListingDetail component
 const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
   const [visibleReviews, setVisibleReviews] = useState(5);
 

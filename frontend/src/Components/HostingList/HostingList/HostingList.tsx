@@ -146,7 +146,7 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                         </>
                       }
                     />
-                    <Button danger onClick={() => handleDelete(item.id)}>Delete</Button> {/* 删除按钮 */}
+                    <Button danger onClick={() => handleDelete(item.id)}>Delete</Button>
                     {item.published
                       ? <Button className={'publishBtn'} onClick={() => handleUnpublish(item.id)}>Unpublish</Button>
                       : <Button className={'publishBtn'} onClick={() => handlePublish(item.id)}>Publish</Button>

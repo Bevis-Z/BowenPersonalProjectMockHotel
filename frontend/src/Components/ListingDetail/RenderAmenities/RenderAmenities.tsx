@@ -10,7 +10,6 @@ interface AmenitiesMapping {
   };
 }
 
-// 映射设施到对应的图标和描述
 const amenitiesMapping: AmenitiesMapping = {
   Wifi: { icon: BiWifi2, text: 'Wifi' },
   TV: { icon: MdTv, text: 'TV' },
@@ -21,6 +20,7 @@ const amenitiesMapping: AmenitiesMapping = {
   Dryer: { icon: FaSink, text: 'Dryer' },
 };
 
+// This is the RenderAmenities component that will be rendered in the ListingDetail component
 export const renderAmenities = (amenities: string[]) => {
   return (
     <div className="amenities-container">

@@ -5,11 +5,12 @@ import dayjs, { Dayjs } from 'dayjs';
 
 interface PublishModalProps {
   visible: boolean;
-  onOk: (selectedDates: string[]) => void; // 更改类型为 string[]
+  onOk: (selectedDates: string[]) => void;
   onCancel: () => void;
   currentHostId: number;
 }
 
+// This is the PublishModal component that will be rendered when user clicks on the Publish button
 const PublishModal: React.FC<PublishModalProps> = ({ visible, onOk, onCancel, currentHostId }) => {
   const [selectedDates, setSelectedDates] = useState<RangePickerProps['value']>(null);
   console.log('currentHostId', currentHostId);
@@ -17,7 +18,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ visible, onOk, onCancel, cu
     if (selectedDates && selectedDates[0] && selectedDates[1]) {
       const allDates = enumerateDaysBetweenDates(selectedDates[0], selectedDates[1]);
       handlePublishRequest(currentHostId, allDates);
-      onOk(allDates); // 调用 onOk 属性
+      onOk(allDates);
     }
   };
 

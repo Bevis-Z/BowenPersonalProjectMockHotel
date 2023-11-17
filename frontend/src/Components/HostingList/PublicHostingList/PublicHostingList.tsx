@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Booking, Listing } from '../HostingList/HostingListInterface';
 import fetchListings from '../fetchListings';
-import { Card, Spin } from 'antd';
+import { Card, Spin, Empty } from 'antd';
 import HostingListImage from '../HostingListImage/HostingListImage';
 import './index.css';
 import { StarOutlined } from '@ant-design/icons';
@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 interface PublicHostingListProps {
   searchFilters: SearchFilters;
 }
+// Calculate the dates between the start and end dates
 function enumerateDaysBetweenDates (startDate: Dayjs, endDate: Dayjs): string[] {
   const dates: string[] = [];
   let currentDate = dayjs(startDate);
@@ -24,6 +25,8 @@ function enumerateDaysBetweenDates (startDate: Dayjs, endDate: Dayjs): string[] 
 
   return dates;
 }
+
+// This is the PublicHostingList component that will be rendered in the PublicHomePage component
 function PublicHostingList ({ searchFilters }: PublicHostingListProps) {
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,6 +70,7 @@ function PublicHostingList ({ searchFilters }: PublicHostingListProps) {
     navigate(`/listing/${listing.id}`, { state: { listing, searchFilters } });
   };
 
+  // Fetch listings and sort them by title
   useEffect(() => {
     const fetchAndSortListings = async () => {
       await fetchListings({ setIsLoading, setListings });
@@ -85,8 +89,9 @@ function PublicHostingList ({ searchFilters }: PublicHostingListProps) {
     fetchAndSortListings();
   }, [searchFilters, userBookings]);
 
+  // Sort listings by corresponding search filters
   useEffect(() => {
-    // 筛选逻辑
+    // Sort listings by title
     const filteredListings = listings.filter(listing => {
       const searchTextLower = searchFilters.searchText.toLowerCase();
       const withinBedroomRange = (searchFilters.minBedrooms == null || listing.totalBeds >= searchFilters.minBedrooms) &&
@@ -122,7 +127,13 @@ function PublicHostingList ({ searchFilters }: PublicHostingListProps) {
   if (isLoading) {
     return <Spin tip="Loading..."></Spin>;
   }
-
+  if (filtered.length === 0) {
+    return (
+      <div className="empty-list">
+        <Empty description="No listings available" />
+      </div>
+    );
+  }
   return (
     <div className={'publicListing'}>
       {filtered.map((item) => {

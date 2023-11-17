@@ -9,6 +9,7 @@ interface BookingListProps {
   userBookings: Booking[];
 }
 
+// This is the BookingList component that will be rendered in the ListingDetail component
 export const BookingList: React.FC<BookingListProps> = ({ userBookings }) => {
   const [visibleBookings, setVisibleBookings] = useState(5);
 
