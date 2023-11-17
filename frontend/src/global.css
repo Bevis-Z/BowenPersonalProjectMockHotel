@@ -3,5 +3,16 @@
     height: 100%;
 }
 
+/*This is used for DatePicker Component for Ant design pro 2.0*/
+.ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+    display: inline-flex;
+    animation: none;
+    flex-wrap: nowrap;
+    direction: ltr;
+}
 
-
+@media (max-width: 768px) {
+    .ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+        display: inline-grid;
+    }
+}

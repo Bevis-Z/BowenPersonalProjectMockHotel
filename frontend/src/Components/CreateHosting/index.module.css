@@ -1,6 +1,4 @@
-#createHosting {
-    margin-left: 0.5em;
-}
+
 
 .inputBedCount {
     display: flex;
@@ -10,14 +8,11 @@
 }
 
 .modal-dialog button {
-    margin-top: 1.5em;
-}
-
-.modal-dialog button {
     margin-top: 0.5em!important;
     margin-bottom: 0.5em;
 }
 
-#addBedBtn {
-    margin-left: 0.5em;
+.operationHosting {
+    display: flex;
+    gap: 0.3em;
 }

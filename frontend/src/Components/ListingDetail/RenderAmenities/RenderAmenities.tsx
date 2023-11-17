@@ -2,7 +2,7 @@ import React from 'react';
 import { MdTv, MdKitchen, MdAcUnit, MdLocalLaundryService } from 'react-icons/md';
 import { FaSnowflake, FaSink } from 'react-icons/fa';
 import { BiWifi2 } from 'react-icons/bi';
-import './amenities.css';
+import styles from './amenities.module.css';
 interface AmenitiesMapping {
   [key: string]: {
     icon: React.ElementType;
@@ -23,14 +23,14 @@ const amenitiesMapping: AmenitiesMapping = {
 // This is the RenderAmenities component that will be rendered in the ListingDetail component
 export const renderAmenities = (amenities: string[]) => {
   return (
-    <div className="amenities-container">
+    <div className={styles.amenitiesContainer}>
       {amenities.map((amenity, index) => {
         const Amenity = amenitiesMapping[amenity];
         if (!Amenity) return null;
 
         const AmenityIcon = Amenity.icon;
         return (
-          <div key={index} className="amenity">
+          <div key={index} className={styles.amenity}>
             <AmenityIcon />
             <span>{Amenity.text}</span>
           </div>

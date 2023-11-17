@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Booking } from '../../HostingList/HostingList/HostingListInterface';
 import { Button, List } from 'antd';
-import './index.css';
+import styles from './index.module.css';
 import dayjs from 'dayjs';
 
 interface BookingListProps {
@@ -22,9 +22,9 @@ export const BookingList: React.FC<BookingListProps> = ({ userBookings }) => {
   };
 
   return (
-    <div className='booking-list-container'>
-      <h2>Bookings History</h2> {/* Header */}
-      <hr /> {/* Horizontal line */}
+    <div className={styles.bookingListContainer}>
+      <h2 className={styles.h2}>Bookings History</h2> {/* Header */}
+      <hr className={styles.hr}/> {/* Horizontal line */}
       <List
         dataSource={userBookings.slice(0, visibleBookings)}
         renderItem={(booking, index) => (

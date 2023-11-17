@@ -4,7 +4,7 @@ import { message, List, Button, Card } from 'antd';
 import { Booking, Listing } from '../HostingList/HostingList/HostingListInterface';
 import dayjs from 'dayjs';
 import LiquidChart from './LiquidChart';
-import './index.css';
+import styles from './index.module.css';
 
 // This component is used to display the booking details for a listing
 const BookingDetails: React.FC = () => {
@@ -127,24 +127,24 @@ const BookingDetails: React.FC = () => {
     }
   };
   return (
-    <div className={'bookingDetails'}>
+    <div className={styles.bookingDetails}>
       <h3>Booking Details: {listing?.title}</h3>
-      <div className={'chartsDisplay'}>
-        <div className={'yearDisplay'}>
-          <Card hoverable className={'liquidDisplay'}>
+      <div className={styles.chartsDisplay}>
+        <div className={styles.yearDisplay}>
+          <Card style={{ height: 'inherit', width: 'fit-content' }} hoverable>
             <h5>All Booking Days This Year:</h5>
             <LiquidChart value={daysBooked} max={maxDaysBooked} />
           </Card>
-          <Card hoverable className={'liquidDisplay'}>
+          <Card hoverable>
             <h5>Posted: {daysSincePosted} Day(s)</h5>
           </Card>
-          <Card hoverable className={'liquidDisplay'}>
+          <Card hoverable>
             <h5>Total Profit This Year:</h5>
             <LiquidChart value={totalProfit} max={maxPrice} />
           </Card>
         </div>
       </div>
-      <div className={'bookingHistory'}>
+      <div className={styles.bookingHistory}>
         <h3>Booking History</h3>
         <List
           itemLayout="horizontal"
@@ -153,9 +153,9 @@ const BookingDetails: React.FC = () => {
             <List.Item
               actions={[
                 booking.status === 'pending' && (
-                  <div className={'actionPriceBox'}>
+                  <div className={styles.actionPriceBox}>
                     <div>Amount: ${booking.totalPrice}</div>
-                    <div className={'actionBox'}>
+                    <div className={styles.actionBox}>
                       <Button onClick={() => handleAcceptBooking(booking.id)} type="primary">
                         Accept
                       </Button>

@@ -14,7 +14,7 @@
     overflow-y: auto; /* Enables vertical scrolling */
 }
 
-.amenities-container {
+.amenitiesContainer {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em; /* Adjust the space between items */

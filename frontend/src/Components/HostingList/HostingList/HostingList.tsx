@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { List, Space, Button, message, Empty } from 'antd';
 import HostingListImage from '../HostingListImage/HostingListImage';
 import { BiSolidBath, BiSolidBed } from 'react-icons/bi';
-import './index.css';
+import styles from './index.module.css';
 import CreateHosting from '../../CreateHosting/CreateHosting';
 import { HostingListProps, Listing } from './HostingListInterface';
 import PublishModal from '../PublishModal';
@@ -90,7 +90,7 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
 
   const listLocale = {
     emptyText: (
-      <div className="custom-empty-data">
+      <div className={styles.customEmptyData}>
         <Empty />
       </div>
     ),
@@ -139,7 +139,7 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                         <>
                           <div>Price per night: ${item.price}</div>
                           <div>Address: {item.address}</div>
-                          <div className={'bedBathBox'}>
+                          <div className={styles.bedBathBox}>
                             <div><BiSolidBed/> {item.totalBeds}</div>
                             <div><BiSolidBath/> {item.metadata.bathroomNumber}</div>
                           </div>
@@ -154,7 +154,6 @@ const HostingList: React.FC<HostingListProps> = ({ refreshList, onHostCreated })
                     <Button
                       type="primary"
                       onClick={() => navigate(`/bookings/${item.id}`, { state: { listing: item } })}
-                      id="viewBooking"
                     >
                       View History
                     </Button>

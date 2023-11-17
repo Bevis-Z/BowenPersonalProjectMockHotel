@@ -7,7 +7,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: stretch;
-    gap: 20px;
+    gap: 2em;
 }
 
 .chartsDisplay {
@@ -26,15 +26,6 @@
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.ant-card-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.liquid-chart-container {
-    width: 25em;
-    height: 25em;
-}
 
 .bookingHistory {
     padding: 2em 0;
@@ -52,35 +43,20 @@
     gap: 0.5em;
 }
 
-.ant-list-items .ant-list-item-action {
-    margin-inline-start: 0!important;
-}
 
 @media (max-width: 1160px) {
     .chartsDisplay {
         padding: 1em 1em;
     }
 
-    .liquid-chart-container {
-        width: 18em;
-        height: 18em;
-    }
 }
 
 
 @media (max-width: 1000px) {
-    .liquid-chart-container {
-        width: 14em;
-        height: 14em;
-    }
+
 }
 
 @media (max-width: 880px) {
-    .liquid-chart-container {
-        width: 10em;
-        height: 10em;
-    }
-
     .bookingDetails {
         padding: 2em 4em;
     }
@@ -97,20 +73,10 @@
     }
 }
 @media (max-width: 720px) {
-    .liquid-chart-container {
-        width: 5em;
-        height: 5em;
-    }
-    .liquid-chart-container .g2-html-annotation {
-        font-size: 1em!important;
-    }
 }
 
 @media (max-width: 651px) {
-    .liquid-chart-container {
-        width: 5em;
-        height: 5em;
-    }
+
     .ant-list-item {
         display: flex;
         flex-direction: row;
@@ -124,25 +90,7 @@
         flex-direction: column;
     }
 
-    .liquid-chart-container {
-        width: 5em;
-        height: 5em;
-        display: flex;
-        flex-direction: column;
-    }
-    .ant-list-item {
-        display: flex;
-        flex-direction: row;
-    }
+
 
 }
 
-
-@media (max-width: 450px) {
-    .ant-list-item {
-        display: flex;
-        flex-direction: row;
-        gap:0.5em;
-    }
-
-}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Liquid } from '@antv/g2plot';
-import './index.css';
+import styles from './index.module.css';
 
 interface LiquidChartProps {
   value: number; // Show the actual value

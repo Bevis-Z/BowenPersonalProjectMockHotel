@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Review } from '../../HostingList/HostingList/HostingListInterface';
 import { Button, List } from 'antd';
-import './index.css';
+import styles from './index.module.css';
 
 interface ReviewListProps {
   reviews: Review[];
@@ -17,9 +17,9 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
   };
 
   return (
-    <div className={'reviews'}>
+    <div className={styles.reviews}>
       <h2>Reviews and Comments</h2> {/* Header */}
-      <hr /> {/* Horizontal line */}
+      <hr className={styles.hr}/> {/* Horizontal line */}
       <List
         dataSource={reviews.slice(0, visibleReviews)}
         renderItem={(review, index) => (

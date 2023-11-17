@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import './index.css';
+import styles from './index.module.css';
 import { Input, Button } from 'antd';
 
 type Bed = {
@@ -143,7 +143,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
                 </Button>
               )}
               {bedroom.beds.map((bed, bedIndex) => (
-                <div key={bedIndex} className={'inputBedCount'}>
+                <div key={bedIndex} className={styles.inputBedCount}>
                   <Input
                     type="number"
                     value={bed.count}
@@ -188,7 +188,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ bathroomNumber, bedrooms, amenities, 
           ))
         }
       </div>
-      <div>
+      <div className={styles.operationHosting}>
         <Button type="primary" ghost onClick={onBack}>
           Back
         </Button>

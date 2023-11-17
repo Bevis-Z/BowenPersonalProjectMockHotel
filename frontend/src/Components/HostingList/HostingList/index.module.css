@@ -1,0 +1,20 @@
+.bedBathBox {
+    display: flex;
+    align-items: center;
+}
+
+
+
+.customEmptyData {
+    margin-top: 8em;
+}
+
+
+
+@media (max-width: 650px) {
+
+    .publishBtn {
+        margin-top: 0.2em;
+    }
+
+}

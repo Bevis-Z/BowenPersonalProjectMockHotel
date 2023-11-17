@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import './index.css';
+import styles from './index.module.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaBars, FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../../AuthContext';
@@ -112,21 +112,21 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
   }, []);
   const renderAvatar = () => {
     if (isLoggedIn) {
-      return <FaUserCircle color={'#FF595F'} size="25px" />;
+      return <FaUserCircle color={'#FF595F'} size="25px" className={styles.FaUserCircle} />;
     }
     return <FaUserCircle color={'grey'} size="25px" />;
   };
   return (
-    <nav className="navbar navbar-expand-lg" id={'navBar'}>
-      <div className="container-fluid">
+    <nav className={`navbar navbar-expand-lg ${styles.navBar}`}>
+      <div className={`container-fluid ${styles.containerFluid}`}>
         <Link className="navbar-brand" to="/" onClick={handleReset}>
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/1200px-Airbnb_Logo_B%C3%A9lo.svg.png"
-            alt="logo" width="auto" height="36" className="d-inline-block align-text-top" />
+            alt="logo" width="auto" height="36" className={`d-inline-block align-text-top ${styles.img}`} />
         </Link>
         {isRootPath && (
-          <div className={'search-dropdown dropup'}>
+          <div className={`search-dropdown dropup ${styles.searchDropdown}`}>
             <Dropdown className={'dropup-center'}>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
+              <Dropdown.Toggle variant="success" className={styles.dropdownBasic}>
                 Search
               </Dropdown.Toggle>
               <Dropdown.Menu className="centered-dropdown-menu">
@@ -154,17 +154,16 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
             </Dropdown>
           </div>
         )}
-        <div className="user-button" ref={dropdownRef}>
+        <div className={styles.userButton} ref={dropdownRef}>
           <button
-            className="navbar-nav me-auto mb-2 mb-lg-0"
+            className={`navbar-nav me-auto mb-2 mb-lg-0 ${styles.navUser}`}
             onClick={toggleUserMenu}
-            id="navUser"
           >
-            <FaBars className={'icon'}/>
+            <FaBars className={styles.icon}/>
             {renderAvatar()}
           </button>
-          <Dropdown show={showUserMenu} className="custom-dropdown">
-            <Dropdown.Menu>
+          <Dropdown show={showUserMenu} className={styles.customDropdown}>
+            <Dropdown.Menu className={styles.dropdownMenu}>
               {
                 isLoggedIn
                   ? (

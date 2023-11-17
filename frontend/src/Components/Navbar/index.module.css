@@ -1,38 +1,38 @@
-#navBar {
+.navBar {
     padding: 1em 4em;
     border-bottom: 0.1em solid aliceblue;
 }
-#navBar .container-fluid{
+.navBar .containerFluid{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-inline: auto;
 }
-.container-fluid > * {
+.containerFluid > * {
     display: flex;
     align-items: center;
 }
 
-#navBar .container-fluid form {
+.navBar .containerFluid form {
     justify-content: center;
 
 }
-.custom-dropdown {
+.customDropdown {
     position: relative;
 }
 
-.custom-dropdown .dropdown-menu {
+.customDropdown .dropdownMenu {
     top: 1em;
     left: auto;
     right: 0;
 }
 
-#dropdown-basic {
+.dropdownBasic {
     background-color: #FF595F;
     border: none;
 }
 
-#navBar .container-fluid .userButton {
+.navBar .containerFluid .userButton {
     flex: 0;
     display: flex;
     justify-content: flex-end;
@@ -40,7 +40,7 @@
 
 }
 
-#navUser {
+.navUser {
     background-color: #ffffff;
     border-radius: 30px;
     padding: 10px 20px;
@@ -53,61 +53,44 @@
     border: none;
     width: 6em;
 }
-#navBar FaUserCircle {
+.navBar FaUserCircle {
     width: 6em;
 }
 
-#navUser:hover {
+.navUser:hover {
     background-color: #f5f5f5; /* Slightly different background on hover */
 }
 
-#navUser:active {
+.navUser:active {
     box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Smaller shadow for a "pressed" effect */
 }
 
-.navbar-expand-lg .navbar-nav {
-    flex-direction: row;
-}
-
 @media (max-width: 650px) and (max-height: 799px) {
-    #navBar {
+    .navBar {
         padding: 0.5em 1em;
     }
 
-    #navBar .container-fluid {
+    .navBar .containerFluid {
         flex-direction: row;
         text-align: center;
     }
 
-    #navBar .container-fluid img{
+    .navBar .containerFluid img{
         width: 4em;
         height: auto;
     }
 
-    #navBar .container-fluid .search-dropdown {
+    .navBar .containerFluid .searchDropdown {
         font-size: 3em;
     }
 
-    #navUser {
+    .navUser {
         width: auto;
         margin-top: 1em;
     }
 
-    #navUser .icon{
+    .navUser .icon{
         display: none;
     }
 
-}
-
-.ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
-    display: inline-flex;
-    animation: none;
-    flex-wrap: nowrap;
-    direction: ltr;
-}
-
-@media (max-width: 768px) {
-    .ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
-        display: inline-grid;
-    }
 }
