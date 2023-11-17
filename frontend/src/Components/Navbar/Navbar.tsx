@@ -158,6 +158,7 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
           <button
             className={`navbar-nav me-auto mb-2 mb-lg-0 ${styles.navUser}`}
             onClick={toggleUserMenu}
+            id={'userButton'}
           >
             <FaBars className={styles.icon}/>
             {renderAvatar()}
@@ -174,6 +175,7 @@ function Navbar ({ onLoginClick, onRegisterClick, onSearch }: NavbarProps) {
                           userLogout();
                           setShowUserMenu(false); // Close the dropdown after logout
                         }}
+                        id={'logoutButton'}
                       >
                         Logout
                       </Dropdown.Item>

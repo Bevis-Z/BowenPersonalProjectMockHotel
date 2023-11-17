@@ -54,7 +54,7 @@ function LoginModal ({ show, onHide }: LoginModalProps) {
           </div>
           <Link to={'/register'}>Register Now</Link>
           <div>
-            <button type="submit" className="btn btn-primary" onClick={ defaultUserLoginRequest }>Login</button>
+            <button type="submit" id={'loginButton'} className="btn btn-primary" onClick={ defaultUserLoginRequest }>Login</button>
           </div>
         </Form>
       </Modal.Body>

@@ -20,16 +20,16 @@ describe('Happy Path', () => {
     cy.visit('localhost:3000/register');
     cy.url().should('include', 'localhost:3000/register');
     // Input Email
-    cy.get('#inputUserEmail').type('example666666645@email.com');
+    cy.get('#inputUserEmail').type('exampleUser12@email.com');
 
     // Input Username
-    cy.get('#inputUserName').type('exampleuser346');
+    cy.get('#inputUserName').type('exampleUser');
 
     // Input Password
-    cy.get('#inputUserPassword').type('password123');
+    cy.get('#inputUserPassword').type('exampleUser');
 
     // Check Password
-    cy.get('#checkUserPassword').type('password123');
+    cy.get('#checkUserPassword').type('exampleUser');
 
     // Submit
     cy.get('button#registerBtn').click();
@@ -44,7 +44,7 @@ describe('Happy Path', () => {
     // Click on the create host button.
     cy.get('button#createHost').click();
     // Input Host Name
-    cy.get('input[type="text"]').eq(0).type('Sample 663t5');
+    cy.get('input[type="text"]').eq(0).type('Sample test12');
 
     // Input Host Description
     cy.get('input[type="text"]').eq(1).type('123 Main St');
@@ -60,10 +60,30 @@ describe('Happy Path', () => {
     cy.get('.bathroom input[type="text"]').type('2');
     cy.get('button#addBedroom').click()
     cy.get('#bedRoomSelect').select('master');
-    cy.get('.inputBedCount input[type="number"]').type('2');
     cy.get('input[type="checkbox"].form-check-input').check({ force: true });
     cy.get('button#createHosting').click();
 
     cy.get('.ant-message').should('contain', 'Create successfully');
+  });
+
+  // Step4 START =====> LogOut and Login.
+  it('Logout Successful & login successfully', () => {
+    cy.visit('localhost:3000/hosting');
+    // Click on the user button.
+    cy.get('button#userButton').click();
+    // Click on the logout button.
+    cy.get('a#logoutButton').click();
+    // Should see a logout message.
+    cy.get('.ant-message').should('contain', 'Logout successfully');
+    // Click on the login button.
+    cy.visit('localhost:3000/login');
+    // Input Email
+    cy.get('#inputUserEmail').type('exampleUser12@email.com');
+    // Input Password
+    cy.get('#inputUserPassword').type('exampleUser');
+    // Submit
+    cy.get('button#loginButton').click();
+    // Show a login message.
+    cy.get('.ant-message').should('contain', 'Login successfully');
   });
 });
