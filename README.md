@@ -1,4 +1,4 @@
-# Assessment 4 - ReactJS: AirBrB
+# ReactJS: AirBrB
 
 1. Background & Motivation
 2. The Task (Frontend)
