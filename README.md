@@ -1,6 +1,6 @@
 ### 1. Project Description
 
-This project is implemented based on separate frontend and backend system, you can find specific command of how to run the program in the end of this file
+This project is implemented based on separate frontend and backend system, you can find specific command of how to run the program in the end of this file.
 
 ### 2.1. Feature Set 1. Admin Auth
 
